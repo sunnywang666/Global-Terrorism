@@ -18,7 +18,13 @@ const COUNTRY_COORDS = {
   'Russia': [105.32, 61.52], 'Ukraine': [31.17, 48.38], 'Iran': [53.69, 32.43],
   'Algeria': [1.66, 28.03], 'Tanzania': [34.89, -6.37], 'Uganda': [32.29, 1.37],
   'South Africa': [22.94, -30.56], 'Mexico': [-102.55, 23.63], 'Chile': [-71.54, -35.68],
-  'Brazil': [-51.93, -14.24], 'Venezuela': [-66.59, 6.42]
+  'Brazil': [-51.93, -14.24], 'Venezuela': [-66.59, 6.42],
+  // Added so every country in the dataset is plotted (previously 12 were dropped)
+  'Netherlands': [5.29, 52.13], 'West Bank and Gaza Strip': [35.23, 31.95],
+  'Cyprus': [33.43, 35.13], 'Ghana': [-1.02, 7.95], 'United Kingdom': [-3.44, 55.38],
+  'Sudan': [30.22, 12.86], 'Australia': [133.78, -25.27], 'Kazakhstan': [66.92, 48.02],
+  'New Caledonia': [165.62, -20.90], 'Trinidad and Tobago': [-61.22, 10.69],
+  'Argentina': [-63.62, -38.42], 'China': [104.20, 35.86]
 };
 
 const P_MAP = {
@@ -150,6 +156,33 @@ async function initGlobe(containerId) {
       }
     ]
   };
+
+  // Bubble-size legend so circle area is interpretable (radius matches the
+  // effectScatter formula: sqrt(attacks / maxAttacks) * 36 + 8).
+  const legendVals = [maxAttacks, Math.max(2, Math.round(maxAttacks * 0.4)), Math.max(1, Math.round(maxAttacks * 0.1))];
+  const radOf = v => (Math.sqrt(v / maxAttacks) * 36 + 8) / 2;
+  const maxR = radOf(legendVals[0]);
+  const titleY = 0, topY = 18, baseY = 18 + 2 * maxR; // circles span topY..baseY
+  const legendChildren = [{
+    type: 'text', x: 0, y: titleY,
+    style: { text: '袭击次数', fill: P_MAP.text, font: '600 11px sans-serif' }
+  }];
+  let cx = maxR;
+  legendVals.forEach(v => {
+    const r = radOf(v);
+    legendChildren.push({
+      type: 'circle', shape: { cx: cx, cy: baseY - r, r: r },
+      style: { fill: 'rgba(194,48,40,0.18)', stroke: P_MAP.red, lineWidth: 1 }
+    });
+    legendChildren.push({
+      type: 'text', x: cx, y: baseY + 6,
+      style: { text: String(v), fill: P_MAP.text, font: '10px sans-serif', align: 'center' }
+    });
+    cx += 2 * maxR + 16;
+  });
+  option.graphic = [{
+    type: 'group', left: 24, bottom: 28, children: legendChildren
+  }];
 
   chart.setOption(option);
 
