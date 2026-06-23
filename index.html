@@ -5830,12 +5830,12 @@
 <section class="hero">
   <div class="h-tag reveal">数据新闻 · 交互式可视化</div>
   <h1 class="h-title reveal delay-1">暗夜之殇<br><em>2020</em>年末全球恐怖袭击图鉴</h1>
-  <p class="h-sub reveal delay-2">2020年11月26日至12月31日，全球记录了701起恐怖袭击事件。<br>平均每天约20起袭击，共造成1,920人死亡、1,298人受伤。</p>
+  <p class="h-sub reveal delay-2">2020年11月26日至12月31日的35天里，全球记录了700起恐怖袭击事件。<br>平均每天约20起袭击，共造成1,920人死亡、1,298人受伤。</p>
   <div class="stats reveal delay-3">
-    <div class="stat"><div class="stat-n counter" data-target="701">0</div><div class="stat-l">袭击事件</div></div>
+    <div class="stat"><div class="stat-n counter" data-target="700">0</div><div class="stat-l">袭击事件</div></div>
     <div class="stat"><div class="stat-n counter" data-target="1920">0</div><div class="stat-l">死亡人数</div></div>
     <div class="stat"><div class="stat-n pale counter" data-target="1298">0</div><div class="stat-l">受伤人数</div></div>
-    <div class="stat"><div class="stat-n dim counter" data-target="56">0</div><div class="stat-l">涉及国家</div></div>
+    <div class="stat"><div class="stat-n dim counter" data-target="45">0</div><div class="stat-l">涉及国家</div></div>
   </div>
   <div class="scroll-cue reveal delay-3"><span>向下滚动</span><div class="scroll-arrow"></div></div>
 </section>
@@ -5846,21 +5846,39 @@
   <div class="reveal">
     <div class="s-num">01 / 坠落的余烬</div>
     <h2 class="s-title">每一天，暴力从未停歇</h2>
-    <p class="s-desc">每一颗光点都是一次真实的袭击。光点的<b>大小代表伤亡规模</b>，<b>颜色深浅反映严重程度</b>。它们如同不断坠落的余烬——36天里没有一天是平静的。</p>
+    <p class="s-desc">每一颗光点都是一次真实的袭击。<b>横轴是日期</b>，<b>纵轴是该次袭击的伤亡人数</b>——点越高，单次伤亡越惨重；点越大越亮，规模越大。它们如同不断坠落的余烬——35天里没有一天是平静的。</p>
   </div>
   <div class="reveal delay-1">
     <div class="cf">
       <div class="cf-h">每一颗余烬，都是一次袭击</div>
-      <div class="cf-s">散点大小 = 伤亡规模 · 颜色深浅 = 严重程度 · 悬停查看 · 底部滑块可缩放</div>
+      <div class="cf-s">横轴 = 日期 · 纵轴 = 单次伤亡 · 散点大小 = 规模 · 悬停查看 · 底部滑块可缩放</div>
       <div id="chart-ember" class="chart h520"></div>
     </div>
+  </div>
+</div>
+
+<!-- 02: CASUALTY TREND -->
+<div class="sec">
+  <div class="glow" style="right:-200px;top:0"></div>
+  <div class="reveal">
+    <div class="s-num">02 / 起伏的伤亡</div>
+    <h2 class="s-title">35天，伤亡曲线的剧烈震荡</h2>
+    <p class="s-desc">把每日死亡与受伤人数连成曲线，暴力的<b>节奏</b>便清晰可见。它并非匀速发生，而是充满骤起的尖峰——<b>12月23日单日就有265人遇难</b>，是整个时段最黑暗的一天。</p>
+  </div>
+  <div class="reveal delay-1">
+    <div class="cf">
+      <div class="cf-h">每日伤亡趋势</div>
+      <div class="cf-s">面积曲线 · 红色为死亡 · 浅红为受伤 · 标注为单日死亡峰值</div>
+      <div id="chart-trend" class="chart h400"></div>
+    </div>
+    <div class="callout"><b>数据洞察：</b>35天里死亡人数的单日峰值（12月23日，265人）接近日均水平（约55人）的<b>5倍</b>。少数极端事件，往往主导了一段时期的伤亡总量。</div>
   </div>
 </div>
 
 <!-- 02: ISOTYPE -->
 <div class="sec">
   <div class="reveal">
-    <div class="s-num">02 / 数字背后的生命</div>
+    <div class="s-num">03 / 数字背后的生命</div>
     <h2 class="s-title">每一个图标，代表十个真实的人</h2>
     <p class="s-desc">统计数字容易让人麻木。用人形图标将伤亡数据具象化——当图标逐行出现，你看到的不是数字，而是<b>生命的重量</b>。</p>
   </div>
@@ -5880,7 +5898,7 @@
 <div class="sec">
   <div class="glow" style="right:-200px;top:80px"></div>
   <div class="reveal">
-    <div class="s-num">03 / 暴力的版图</div>
+    <div class="s-num">04 / 暴力的版图</div>
     <h2 class="s-title">伤痕遍布的世界</h2>
     <p class="s-desc">地图上的每一个红色光点代表一个遭受袭击的国家。光点越大越亮，袭击越频繁。主要热点集中在<b>中东、南亚和撒哈拉以南非洲</b>。可<b>拖拽平移</b>、<b>滚轮缩放</b>，悬停查看详细数据。</p>
   </div>
@@ -5898,7 +5916,7 @@
 <div class="sec">
   <div class="glow" style="left:50%;top:40%;transform:translate(-50%,-50%)"></div>
   <div class="reveal">
-    <div class="s-num">04 / 暴力的网络</div>
+    <div class="s-num">05 / 暴力的网络</div>
     <h2 class="s-title">恐怖组织与国家的关联图谱</h2>
     <p class="s-desc"><b style="color:var(--red)">红色</b>节点是恐怖组织，<b style="color:var(--dim)">灰色</b>节点是活动国家。节点越大，袭击越多。连线表示该组织曾在该国发动袭击。可<b>拖拽</b>节点、<b>缩放</b>画面、<b>悬停</b>聚焦关联。</p>
   </div>
@@ -5917,7 +5935,7 @@
 <!-- 05: WEAPONS -->
 <div class="sec">
   <div class="reveal">
-    <div class="s-num">05 / 暴力的工具</div>
+    <div class="s-num">06 / 暴力的工具</div>
     <h2 class="s-title">武器选择：爆炸物与枪械的统治</h2>
     <p class="s-desc">爆炸物和枪械是恐怖袭击中最常使用的武器，合计超过总数的 <b>70%</b>。</p>
   </div>
@@ -5930,11 +5948,27 @@
   </div>
 </div>
 
-<!-- 06: TARGET -->
+<!-- 07: ATTACK TYPE -->
+<div class="sec">
+  <div class="reveal">
+    <div class="s-num">07 / 暴力的手法</div>
+    <h2 class="s-title">袭击如何实施</h2>
+    <p class="s-desc">按主要手法划分，<b>爆炸袭击</b>占据绝对主导（281起，约40%），其次是<b>武装袭击</b>。绑架、暗杀虽数量较少，却往往针对特定个体，带来不同性质的恐惧。</p>
+  </div>
+  <div class="reveal delay-1">
+    <div class="cf">
+      <div class="cf-h">袭击类型分布（主要手法）</div>
+      <div class="cf-s">横向柱状图 · 悬停查看占比</div>
+      <div id="chart-attacktype" class="chart h400"></div>
+    </div>
+  </div>
+</div>
+
+<!-- 08: TARGET -->
 <div class="sec">
   <div class="glow" style="left:50%;top:50%;transform:translate(-50%,-50%)"></div>
   <div class="reveal">
-    <div class="s-num">06 / 谁是靶心？</div>
+    <div class="s-num">08 / 谁是靶心？</div>
     <h2 class="s-title">攻击目标：暴力的代价由谁承担</h2>
   </div>
   <div class="reveal delay-1">
@@ -5944,6 +5978,24 @@
       <div id="chart-target" class="chart h400"></div>
     </div>
     <div class="callout">超过 <b>26%</b> 的袭击以平民为目标，军事目标和警察紧随其后——大量恐怖活动是针对无辜民众的无差别暴力。</div>
+  </div>
+</div>
+
+<!-- 09: LETHALITY -->
+<div class="sec">
+  <div class="glow" style="right:-200px;top:40%"></div>
+  <div class="reveal">
+    <div class="s-num">09 / 最常见 ≠ 最致命</div>
+    <h2 class="s-title">数量与杀伤力的背离</h2>
+    <p class="s-desc">爆炸袭击数量最多，<b>但平均每起仅造成约1.5人死亡</b>；而<b>武装袭击</b>虽数量更少，每起却平均夺走<b>5条生命</b>——是爆炸的3倍以上。频率最高的手法，并不等于最致命的手法。</p>
+  </div>
+  <div class="reveal delay-1">
+    <div class="cf">
+      <div class="cf-h">袭击次数 vs 每起致死人数</div>
+      <div class="cf-s">柱 = 发生次数（左轴）· 折线 = 平均每起致死人数（右轴）</div>
+      <div id="chart-lethality" class="chart h400"></div>
+    </div>
+    <div class="callout"><b>数据洞察：</b>评估恐怖袭击的危害，不能只看次数。<b>武装袭击</b>这类面对面的暴力，单次杀伤力远高于看似更"标志性"的爆炸袭击。</div>
   </div>
 </div>
 
@@ -5963,7 +6015,7 @@
 </div><!-- .page -->
 
 <footer class="footer">
-  <p>数据来源：全球恐怖袭击信息数据（样本数据）· 2020.11.26 — 2020.12.31</p>
+  <p>数据来源：CnOpenData · 全球恐怖袭击数据 · 2020.11.26 — 2020.12.31（共35天 / 700起事件）</p>
   <p style="margin-top:4px">可视化技术：ECharts · HTML/CSS/JavaScript</p>
 </footer>
 
@@ -5981,12 +6033,15 @@ document.addEventListener('DOMContentLoaded', function() {
   setupStaggerReveal();
 
   createEmberChart('chart-ember');
+  createTrendChart('chart-trend');
   buildIsotype('isotype-killed', 1920, 10, '#c23028', '人死亡');
   buildIsotype('isotype-injured', 1298, 10, '#f5a8a0', '人受伤');
   initGlobe('globe-container');
   createForceChart('chart-force');
   buildWeaponViz('weapon-viz');
+  createAttackTypeChart('chart-attacktype');
   createTargetChart('chart-target');
+  createLethalityChart('chart-lethality');
   setupChartResize();
 });
 </script>
