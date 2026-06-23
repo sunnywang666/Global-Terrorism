@@ -182,7 +182,7 @@ async function initGlobe(containerId) {
     cx += 2 * maxR + 16;
   });
   option.graphic = [{
-    type: 'group', left: 24, bottom: 28, children: legendChildren
+    type: 'group', left: 24, top: 22, children: legendChildren
   }];
 
   chart.setOption(option);
@@ -217,6 +217,26 @@ function setupMapStory(chart, effectData, normalData) {
     if (f.country) return d.name === f.country ? 1 : 0.08;
     return d.region === f.region ? 1 : 0.08;
   };
+  // Smoothly tween geo center/zoom (ECharts doesn't animate these on setOption)
+  let cur = { center: [30, 18], zoom: 1.05 };
+  let raf = null;
+  function flyTo(target) {
+    if (raf) cancelAnimationFrame(raf);
+    const from = { center: cur.center.slice(), zoom: cur.zoom };
+    const t0 = (window.performance || Date).now();
+    const dur = 750;
+    function frame(now) {
+      const k = Math.min(((window.performance || Date).now() - t0) / dur, 1);
+      const e = 1 - Math.pow(1 - k, 3); // easeOutCubic
+      const center = [from.center[0] + (target.center[0] - from.center[0]) * e,
+                      from.center[1] + (target.center[1] - from.center[1]) * e];
+      const zoom = from.zoom + (target.zoom - from.zoom) * e;
+      chart.setOption({ geo: { center: center, zoom: zoom } });
+      cur = { center: center, zoom: zoom };
+      if (k < 1) raf = requestAnimationFrame(frame);
+    }
+    raf = requestAnimationFrame(frame);
+  }
   function apply(id) {
     const s = STATES[id];
     if (!s) return;
@@ -224,7 +244,8 @@ function setupMapStory(chart, effectData, normalData) {
       color: P_MAP.red, shadowBlur: 20, shadowColor: 'rgba(194,48,40,0.5)', opacity: emph(d, s.focus) } }));
     const nd = normalData.map(d => ({ ...d, itemStyle: {
       color: P_MAP.redDk, borderColor: P_MAP.red, borderWidth: 1, opacity: 0.8 * emph(d, s.focus) } }));
-    chart.setOption({ geo: { center: s.center, zoom: s.zoom }, series: [{ data: ed }, { data: nd }] });
+    chart.setOption({ series: [{ data: ed }, { data: nd }] });
+    flyTo(s);
     if (anno) {
       if (s.title) {
         anno.style.opacity = '1';
