@@ -5841,6 +5841,9 @@
     .story-ghead .s-num{margin-bottom:6px}
     .story-ghead .s-title{font-size:clamp(18px,2.6vw,26px);margin-bottom:0}
     @media(max-width:768px){ .story-chart{height:54vh} }
+    /* clean de-carded figure (replaces .cf cards for simple charts) */
+    .figure{margin-top:20px;margin-bottom:8px}
+    .fig-cap{font-size:12px;color:var(--dim);margin-bottom:14px}
   </style>
 </head>
 <body>
@@ -5864,22 +5867,27 @@
   <div class="scroll-cue reveal delay-3"><span>向下滚动</span><div class="scroll-arrow"></div></div>
 </section>
 
-<!-- 01: EMBERS -->
-<div class="sec">
-  <div class="glow" style="left:-200px;top:0"></div>
-  <div class="reveal">
-    <div class="s-num">01 / 坠落的余烬</div>
-    <h2 class="s-title">每一天，暴力从未停歇</h2>
-    <p class="s-desc">每一颗光点都是一次真实的袭击。<b>横轴是日期</b>，<b>纵轴是该次袭击的伤亡人数</b>——点越高，单次伤亡越惨重；点越大越亮，规模越大。它们如同不断坠落的余烬——35天里没有一天是平静的。</p>
+<!-- 01: EMBERS — scrollytelling -->
+<section id="sec-ember" class="story-section" data-chapter="01">
+  <div class="story-graphic is-chart">
+    <div class="story-ghead">
+      <div class="s-num">01 / 坠落的余烬</div>
+      <h2 class="s-title">每一天，暴力从未停歇</h2>
+    </div>
+    <div id="chart-ember" class="story-chart"></div>
   </div>
-  <div class="reveal delay-1">
-    <div class="cf">
-      <div class="cf-h">每一颗余烬，都是一次袭击</div>
-      <div class="cf-s">横轴 = 日期 · 纵轴 = 单次伤亡 · 散点大小 = 规模 · 悬停查看 · 底部滑块可缩放</div>
-      <div id="chart-ember" class="chart h520"></div>
+  <div class="story-steps">
+    <div class="story-step" data-state="ember-all">
+      <div class="story-card"><p>每一颗光点都是一次真实袭击：<b>横轴是日期，纵轴是单次伤亡人数</b>，点越高越惨重。35 天里，没有一天是平静的。</p></div>
+    </div>
+    <div class="story-step" data-state="ember-severe">
+      <div class="story-card"><p>把<b>伤亡 ≥ 10 人</b>的袭击单独点亮——它们只是少数，却贡献了绝大部分伤亡。代价高度集中在少数极端事件上。</p></div>
+    </div>
+    <div class="story-step" data-state="ember-peak">
+      <div class="story-card"><p>只看 <b>12 月 23 日</b>这一天：寥寥几起袭击就造成了 <b>265 人遇难</b>——整段时期最黑暗的一天。</p></div>
     </div>
   </div>
-</div>
+</section>
 
 <!-- 02: CASUALTY TREND — scrollytelling -->
 <section id="sec-trend" class="story-section" data-chapter="02">
@@ -5951,25 +5959,27 @@
   </div>
 </section>
 
-<!-- 04: FORCE NETWORK -->
-<div class="sec">
-  <div class="glow" style="left:50%;top:40%;transform:translate(-50%,-50%)"></div>
-  <div class="reveal">
-    <div class="s-num">05 / 暴力的网络</div>
-    <h2 class="s-title">恐怖组织与国家的关联图谱</h2>
-    <p class="s-desc"><b style="color:var(--red)">红色</b>节点是恐怖组织，<b style="color:var(--dim)">灰色</b>节点是活动国家。节点越大，袭击越多。连线表示该组织曾在该国发动袭击。可<b>拖拽</b>节点、<b>缩放</b>画面、<b>悬停</b>聚焦关联。</p>
-  </div>
-  <div class="reveal delay-1">
-    <div class="cf">
-      <div class="cf-h">恐怖组织 — 国家关联网络</div>
-      <div class="cf-s">力导向图 · 拖拽节点 · 鼠标滚轮缩放 · 悬停聚焦关联关系</div>
-      <div id="chart-force" class="chart h520"></div>
+<!-- 05: FORCE NETWORK — scrollytelling -->
+<section id="sec-force" class="story-section" data-chapter="05">
+  <div class="story-graphic is-chart">
+    <div class="story-ghead">
+      <div class="s-num">05 / 暴力的网络</div>
+      <h2 class="s-title">恐怖组织与国家的关联图谱</h2>
     </div>
-    <div class="callout">
-      <b>塔利班</b>是最活跃的恐怖组织，140起袭击<b>全部发生在阿富汗</b>。<b>ISIL</b>则有40起袭击，集中在<b>伊拉克（31起）与叙利亚（9起）</b>两国。
+    <div id="chart-force" class="story-chart"></div>
+  </div>
+  <div class="story-steps">
+    <div class="story-step" data-state="force-intro">
+      <div class="story-card"><p><b style="color:var(--red)">红色</b>是恐怖组织，<b style="color:var(--dim)">灰色</b>是国家；连线表示该组织在该国发动过袭击，<b>线越粗次数越多</b>。可拖拽节点查看。</p></div>
+    </div>
+    <div class="story-step" data-state="force-taliban">
+      <div class="story-card"><p><b>塔利班</b>是最活跃的组织——140 起袭击<b>全部集中在阿富汗</b>，一条又粗又孤立的连线。</p></div>
+    </div>
+    <div class="story-step" data-state="force-isil">
+      <div class="story-card"><p><b>ISIL</b>则不同：40 起袭击<b>分散在伊拉克（31）与叙利亚（9）</b>，呈现出跨国活动的网络。</p></div>
     </div>
   </div>
-</div>
+</section>
 
 <!-- 05: WEAPONS -->
 <div class="sec">
@@ -5978,12 +5988,9 @@
     <h2 class="s-title">武器选择：爆炸物与枪械的统治</h2>
     <p class="s-desc">爆炸物和枪械是恐怖袭击中最常使用的武器，合计超过总数的 <b>70%</b>。</p>
   </div>
-  <div class="reveal delay-1">
-    <div class="cf" style="padding:20px 24px">
-      <div class="cf-h">武器类型分布</div>
-      <div class="cf-s">图标式信息图 · 柱条长度代表使用频次</div>
-      <div id="weapon-viz" style="margin-top:4px"></div>
-    </div>
+  <div class="figure reveal delay-1">
+    <div class="fig-cap">武器类型分布 · 图标式信息图 · 柱条长度代表使用频次</div>
+    <div id="weapon-viz"></div>
   </div>
 </div>
 
@@ -5994,28 +6001,21 @@
     <h2 class="s-title">袭击如何实施</h2>
     <p class="s-desc">按主要手法划分，<b>爆炸袭击</b>占据绝对主导（281起，约40%），其次是<b>武装袭击</b>。绑架、暗杀虽数量较少，却往往针对特定个体，带来不同性质的恐惧。</p>
   </div>
-  <div class="reveal delay-1">
-    <div class="cf">
-      <div class="cf-h">袭击类型分布（主要手法）</div>
-      <div class="cf-s">横向柱状图 · 悬停查看占比</div>
-      <div id="chart-attacktype" class="chart h400"></div>
-    </div>
+  <div class="figure reveal delay-1">
+    <div class="fig-cap">袭击类型分布（主要手法）· 横向柱状图 · 悬停查看占比</div>
+    <div id="chart-attacktype" class="chart h400"></div>
   </div>
 </div>
 
 <!-- 08: TARGET -->
 <div class="sec">
-  <div class="glow" style="left:50%;top:50%;transform:translate(-50%,-50%)"></div>
   <div class="reveal">
     <div class="s-num">08 / 谁是靶心？</div>
     <h2 class="s-title">攻击目标：暴力的代价由谁承担</h2>
   </div>
-  <div class="reveal delay-1">
-    <div class="cf">
-      <div class="cf-h">攻击目标分布</div>
-      <div class="cf-s">横向柱状图 · 悬停查看详细占比</div>
-      <div id="chart-target" class="chart h400"></div>
-    </div>
+  <div class="figure reveal delay-1">
+    <div class="fig-cap">攻击目标分布 · 横向柱状图 · 悬停查看详细占比</div>
+    <div id="chart-target" class="chart h400"></div>
     <div class="callout">超过 <b>26%</b> 的袭击以平民为目标，军事目标和警察紧随其后——大量恐怖活动是针对无辜民众的无差别暴力。</div>
   </div>
 </div>
@@ -6075,12 +6075,12 @@ document.addEventListener('DOMContentLoaded', function() {
   setupCounters();
   setupStaggerReveal();
 
-  createEmberChart('chart-ember');
+  setupEmberStory(createEmberChart('chart-ember'));
   setupTrendStory(createTrendChart('chart-trend'));
   buildIsotype('isotype-killed', 1920, 10, '#c23028', '人死亡');
   buildIsotype('isotype-injured', 1298, 10, '#f5a8a0', '人受伤');
   initGlobe('globe-container');
-  createForceChart('chart-force');
+  setupForceStory(createForceChart('chart-force'));
   buildWeaponViz('weapon-viz');
   createAttackTypeChart('chart-attacktype');
   createTargetChart('chart-target');

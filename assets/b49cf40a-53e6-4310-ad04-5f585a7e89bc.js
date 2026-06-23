@@ -89,8 +89,8 @@ function createEmberChart(containerId) {
         backgroundColor: P.card, fillerColor: 'rgba(194,48,40,0.1)',
         handleStyle: { color: P.red3 }, textStyle: { color: P.dim },
         dataBackground: { lineStyle: { color: P.red2, opacity: 0.3 }, areaStyle: { color: P.red2, opacity: 0.08 } }
-      },
-      { type: 'inside' }
+      }
+      // NOTE: no { type:'inside' } — wheel must scroll the page, not zoom the chart
     ],
     series: [{
       type: 'scatter', data: scatterData,
@@ -117,6 +117,7 @@ function createEmberChart(containerId) {
       animationDuration: 500
     }]
   });
+  chart.__scatterData = scatterData; // expose for scroll-driven story
   return chart;
 }
 
@@ -251,7 +252,7 @@ function createForceChart(containerId) {
       data: ['国家/地区', '恐怖组织'], textStyle: { color: P.dim }, top: 10
     },
     series: [{
-      type: 'graph', layout: 'force', roam: true, draggable: true,
+      type: 'graph', layout: 'force', roam: 'move', draggable: true,
       categories: [
         { name: '国家/地区', itemStyle: { color: P.dim } },
         { name: '恐怖组织', itemStyle: { color: P.red3 } }
@@ -584,6 +585,43 @@ function setupLethalityStory(chart) {
     if (e.detail && e.detail.section === 'sec-leth' && STATES[e.detail.state]) chart.setOption(STATES[e.detail.state]);
   });
   chart.setOption(STATES['leth-freq']);
+}
+
+function setupEmberStory(chart) {
+  if (!chart || !chart.__scatterData) return;
+  const data = chart.__scatterData;
+  const dc = TERROR_DATA.dailyCasualties;
+  let peak = dc[0];
+  dc.forEach(d => { if (d.killed > peak.killed) peak = d; });
+  const peakDate = peak.date;
+  const withOpacity = fn => ({ series: [{ data: data.map(d => ({ value: d.value, itemStyle: { opacity: fn(d.value) } })) }] });
+  const STATES = {
+    'ember-all':    withOpacity(() => 0.8),
+    'ember-severe': withOpacity(v => v[2] >= 10 ? 0.92 : 0.05),
+    'ember-peak':   withOpacity(v => v[7] === peakDate ? 1 : 0.04)
+  };
+  window.addEventListener('storystate', e => {
+    if (e.detail && e.detail.section === 'sec-ember' && STATES[e.detail.state]) chart.setOption(STATES[e.detail.state]);
+  });
+  chart.setOption(STATES['ember-all']);
+}
+
+function setupForceStory(chart) {
+  if (!chart) return;
+  const FOCUS = {
+    'force-intro': null,
+    'force-taliban': 'Taliban',
+    'force-isil': 'Islamic State of Iraq and the Levant (ISIL)'
+  };
+  function apply(id) {
+    chart.dispatchAction({ type: 'downplay', seriesIndex: 0 });
+    const name = FOCUS[id];
+    if (name) chart.dispatchAction({ type: 'highlight', seriesIndex: 0, name: name });
+  }
+  window.addEventListener('storystate', e => {
+    if (e.detail && e.detail.section === 'sec-force' && (e.detail.state in FOCUS)) apply(e.detail.state);
+  });
+  apply('force-intro');
 }
 
 // ============================================================
