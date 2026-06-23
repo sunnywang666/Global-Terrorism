@@ -67,7 +67,8 @@ async function initGlobe(containerId) {
     value: [...COUNTRY_COORDS[c.name], c.attacks],
     attacks: c.attacks,
     killed: c.killed,
-    injured: c.injured
+    injured: c.injured,
+    region: c.region
   }));
 
   // EffectScatter for top countries (glowing pulse)
@@ -186,6 +187,9 @@ async function initGlobe(containerId) {
 
   chart.setOption(option);
 
+  // Wire up scroll-driven story (sticky map flies to each hotspot region)
+  setupMapStory(chart, effectData, normalData);
+
   // Resize handler
   window.addEventListener('resize', () => {
     if (globeChartInstance) globeChartInstance.resize();
@@ -194,4 +198,44 @@ async function initGlobe(containerId) {
     if (globeChartInstance) globeChartInstance.resize();
   });
   resizeObs.observe(container);
+}
+
+// Scrollytelling: as the user scrolls past each step, fly the sticky map to a
+// region and dim everything else, with a big annotation. Driven by the
+// 'storystate' events dispatched by ScrollEngine.setupStickySections().
+function setupMapStory(chart, effectData, normalData) {
+  const anno = document.getElementById('map-anno');
+  const STATES = {
+    'map-intro': { center: [30, 18], zoom: 1.05, focus: null, title: '', sub: '' },
+    'map-sasia': { center: [80, 24], zoom: 2.4, focus: { region: 'South Asia' }, title: '南亚 · 314 起', sub: '全球最密集的热区' },
+    'map-mena':  { center: [44, 28], zoom: 2.4, focus: { region: 'Middle East & North Africa' }, title: '中东与北非 · 167 起', sub: '' },
+    'map-ssa':   { center: [22, 2],  zoom: 2.0, focus: { region: 'Sub-Saharan Africa' }, title: '撒哈拉以南非洲 · 155 起', sub: '' },
+    'map-afg':   { center: [66, 34], zoom: 4.5, focus: { country: 'Afghanistan' }, title: '阿富汗 · 234 起', sub: '一国即占全球三分之一' }
+  };
+  const emph = (d, f) => {
+    if (!f) return 1;
+    if (f.country) return d.name === f.country ? 1 : 0.08;
+    return d.region === f.region ? 1 : 0.08;
+  };
+  function apply(id) {
+    const s = STATES[id];
+    if (!s) return;
+    const ed = effectData.map(d => ({ ...d, itemStyle: {
+      color: P_MAP.red, shadowBlur: 20, shadowColor: 'rgba(194,48,40,0.5)', opacity: emph(d, s.focus) } }));
+    const nd = normalData.map(d => ({ ...d, itemStyle: {
+      color: P_MAP.redDk, borderColor: P_MAP.red, borderWidth: 1, opacity: 0.8 * emph(d, s.focus) } }));
+    chart.setOption({ geo: { center: s.center, zoom: s.zoom }, series: [{ data: ed }, { data: nd }] });
+    if (anno) {
+      if (s.title) {
+        anno.style.opacity = '1';
+        anno.innerHTML = '<div class="a-title">' + s.title + '</div>' + (s.sub ? '<div class="a-sub">' + s.sub + '</div>' : '');
+      } else {
+        anno.style.opacity = '0';
+      }
+    }
+  }
+  window.addEventListener('storystate', e => {
+    if (e.detail && e.detail.section === 'sec-map') apply(e.detail.state);
+  });
+  apply('map-intro');
 }
