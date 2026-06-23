@@ -91,7 +91,7 @@ async function initGlobe(containerId) {
     },
     geo: {
       map: 'world',
-      roam: true,
+      roam: false, // scroll-driven story controls zoom/center; roam would hijack page scroll
       zoom: 1.5,
       center: [55, 25], // Center on Middle East / South Asia
       silent: false,
