@@ -541,6 +541,52 @@ function createLethalityChart(containerId) {
 }
 
 // ============================================================
+// SCROLLYTELLING handlers — driven by 'storystate' events
+// ============================================================
+function setupTrendStory(chart) {
+  if (!chart) return;
+  const dc = TERROR_DATA.dailyCasualties;
+  let peakIdx = 0;
+  dc.forEach((d, i) => { if (d.killed > dc[peakIdx].killed) peakIdx = i; });
+  const peak = dc[peakIdx];
+  const injured = dc.map(d => d.injured);
+  const mp = { symbol: 'pin', symbolSize: 46, data: [{ coord: [peakIdx, peak.killed], value: peak.killed }],
+    itemStyle: { color: P.red4 }, label: { color: '#fff', fontSize: 11, fontWeight: 600 } };
+  const ml = { silent: true, symbol: 'none', lineStyle: { color: P.red4, type: 'dashed', opacity: 0.5 },
+    label: { color: P.red5, fontSize: 10, formatter: `${peak.date.substring(5)} 单日 ${peak.killed} 人遇难` }, data: [{ xAxis: peakIdx }] };
+  const STATES = {
+    'trend-intro':   { series: [{ markPoint: { data: [] }, markLine: { data: [] } }, { data: [] }] },
+    'trend-peak':    { series: [{ markPoint: mp, markLine: ml }, { data: [] }] },
+    'trend-injured': { series: [{ markPoint: mp, markLine: ml }, { data: injured }] }
+  };
+  window.addEventListener('storystate', e => {
+    if (e.detail && e.detail.section === 'sec-trend' && STATES[e.detail.state]) chart.setOption(STATES[e.detail.state]);
+  });
+  chart.setOption(STATES['trend-intro']);
+}
+
+function setupLethalityStory(chart) {
+  if (!chart) return;
+  const order = ['Bombing/Explosion', 'Armed Assault', 'Assassination',
+    'Hostage Taking (Kidnapping)', 'Facility/Infrastructure Attack'];
+  const byType = {};
+  TERROR_DATA.lethalByType.forEach(d => byType[d.name] = d);
+  const rows = order.filter(n => byType[n]).map(n => byType[n]);
+  const freq = rows.map(d => d.attacks);
+  const lethal = rows.map(d => d.perAttack);
+  const dimBars = freq.map((v, i) => ({ value: v, itemStyle: { opacity: i < 2 ? 1 : 0.22 } }));
+  const STATES = {
+    'leth-freq':     { series: [{ data: freq }, { data: [] }] },
+    'leth-deadly':   { series: [{ data: freq }, { data: lethal }] },
+    'leth-contrast': { series: [{ data: dimBars }, { data: lethal }] }
+  };
+  window.addEventListener('storystate', e => {
+    if (e.detail && e.detail.section === 'sec-leth' && STATES[e.detail.state]) chart.setOption(STATES[e.detail.state]);
+  });
+  chart.setOption(STATES['leth-freq']);
+}
+
+// ============================================================
 // Resize all charts
 // ============================================================
 function setupChartResize() {
