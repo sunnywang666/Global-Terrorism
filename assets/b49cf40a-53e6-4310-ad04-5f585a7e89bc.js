@@ -36,13 +36,18 @@ function createEmberChart(containerId) {
   const dateMap = {};
   dateSet.forEach((d, i) => dateMap[d] = i);
 
+  // Y axis now encodes a REAL variable — single-event casualties (killed + injured).
+  // X keeps the date order but gets a small deterministic-ish jitter so same-day
+  // attacks fan out instead of stacking on one vertical line.
   const scatterData = raw.map(d => {
     const cas = d.killed + d.injured;
+    const jitter = (Math.random() - 0.5) * 0.72; // horizontal spread within the day
     return {
-      value: [dateMap[d.date], Math.random()*90+5, Math.max(cas,1),
+      value: [dateMap[d.date] + jitter, cas, Math.max(cas, 1),
         d.country, d.attackType, d.killed, d.injured, d.date, d.region]
     };
   });
+  const maxCas = Math.max(...scatterData.map(s => s.value[1]), 1);
 
   chart.setOption({
     backgroundColor: 'transparent',
@@ -59,14 +64,26 @@ function createEmberChart(containerId) {
           <div style="margin-top:4px">死亡 <b style="color:${P.red3}">${v[5]}</b> · 受伤 <b style="color:${P.red5}">${v[6]}</b></div>`;
       }
     },
-    grid: { left: 50, right: 30, top: 20, bottom: 60 },
+    grid: { left: 56, right: 30, top: 24, bottom: 60 },
     xAxis: {
-      type: 'category', data: dateSet.map(d => d.substring(5)),
+      type: 'value', min: -0.5, max: dateSet.length - 0.5,
+      interval: 3,
       axisLine: { lineStyle: { color: P.border } },
-      axisLabel: { color: P.dim, fontSize: 11, interval: 3 },
-      axisTick: { show: false }
+      axisLabel: {
+        color: P.dim, fontSize: 11,
+        formatter: v => { const d = dateSet[Math.round(v)]; return d ? d.substring(5) : ''; }
+      },
+      axisTick: { show: false },
+      splitLine: { show: false }
     },
-    yAxis: { type: 'value', show: false, min: 0, max: 100 },
+    yAxis: {
+      type: 'value', show: true, min: 0,
+      name: '单次伤亡 (死+伤)', nameTextStyle: { color: P.dim, fontSize: 11, align: 'left' },
+      nameGap: 14, nameLocation: 'end',
+      axisLine: { show: false }, axisTick: { show: false },
+      axisLabel: { color: P.dim, fontSize: 10 },
+      splitLine: { lineStyle: { color: P.border, type: 'dashed', opacity: 0.4 } }
+    },
     dataZoom: [
       { type: 'slider', height: 20, bottom: 4, borderColor: P.border,
         backgroundColor: P.card, fillerColor: 'rgba(194,48,40,0.1)',
@@ -178,16 +195,26 @@ function createForceChart(containerId) {
   const countryData = TERROR_DATA.countryStats.slice(0, 12);
   const perpData = TERROR_DATA.perpetrators.slice(0, 8);
 
-  const links = [];
-  const linkSet = new Set();
+  // Aggregate links by attack count so edge thickness encodes how often a group
+  // struck in a given country (previously every edge was rendered identically).
+  const linkCount = {};
   raw.forEach(d => {
     if (d.perpetrator === 'Unknown' || !d.perpetrator) return;
     const hasPer = perpData.find(p => p[0] === d.perpetrator);
     const hasCou = countryData.find(c => c.name === d.country);
     if (hasPer && hasCou) {
       const key = d.perpetrator + '→' + d.country;
-      if (!linkSet.has(key)) { linkSet.add(key); links.push({ source: d.perpetrator, target: d.country }); }
+      linkCount[key] = (linkCount[key] || 0) + 1;
     }
+  });
+  const maxLink = Math.max(1, ...Object.values(linkCount));
+  const links = Object.keys(linkCount).map(key => {
+    const [source, target] = key.split('→');
+    const n = linkCount[key];
+    return {
+      source, target, value: n,
+      lineStyle: { width: 1 + Math.sqrt(n) * 1.4, opacity: 0.18 + 0.5 * (n / maxLink) }
+    };
   });
 
   const countryNodes = countryData.map(c => ({
@@ -213,7 +240,7 @@ function createForceChart(containerId) {
       backgroundColor: 'rgba(10,13,18,0.95)', borderColor: P.border,
       textStyle: { color: P.text },
       formatter: p => {
-        if (p.dataType === 'edge') return `<span style="color:${P.dim}">${p.data.source} → ${p.data.target}</span>`;
+        if (p.dataType === 'edge') return `<span style="color:${P.dim}">${p.data.source} → ${p.data.target}</span><div style="margin-top:3px">在该国发动 <b style="color:${P.red4}">${p.data.value}</b> 次袭击</div>`;
         const type = p.data.category === 0 ? '国家' : '恐怖组织';
         const col = p.data.category === 0 ? P.text : P.red4;
         return `<div style="font-weight:600;color:${col}">${p.name}</div>
@@ -320,6 +347,195 @@ function createTargetChart(containerId) {
       animationDelay: function(i) { return i * 120; },
       animationEasing: 'cubicOut'
     }]
+  });
+  return chart;
+}
+
+// ============================================================
+// 6. CASUALTY TREND — daily killed/injured area with peak annotation
+// ============================================================
+function createTrendChart(containerId) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  const chart = echarts.init(el);
+  const dc = TERROR_DATA.dailyCasualties;
+  const dates = dc.map(d => d.date.substring(5));
+  const killed = dc.map(d => d.killed);
+  const injured = dc.map(d => d.injured);
+
+  // Find the deadliest day to annotate
+  let peakIdx = 0;
+  dc.forEach((d, i) => { if (d.killed > dc[peakIdx].killed) peakIdx = i; });
+  const peak = dc[peakIdx];
+
+  chart.setOption({
+    backgroundColor: 'transparent',
+    tooltip: {
+      trigger: 'axis',
+      backgroundColor: 'rgba(10,13,18,0.95)', borderColor: P.border,
+      textStyle: { color: P.text, fontSize: 13 },
+      formatter: params => {
+        const i = params[0].dataIndex;
+        return `<div style="font-weight:600;color:${P.red4};margin-bottom:4px">2020-${dc[i].date.substring(5)}</div>
+          <div>袭击 <b>${dc[i].count}</b> 起</div>
+          <div>死亡 <b style="color:${P.red3}">${dc[i].killed}</b> · 受伤 <b style="color:${P.red5}">${dc[i].injured}</b></div>`;
+      }
+    },
+    legend: { data: ['死亡', '受伤'], textStyle: { color: P.dim }, top: 0, right: 0 },
+    grid: { left: 44, right: 20, top: 36, bottom: 40 },
+    xAxis: {
+      type: 'category', data: dates, boundaryGap: false,
+      axisLine: { lineStyle: { color: P.border } },
+      axisLabel: { color: P.dim, fontSize: 10, interval: 3 },
+      axisTick: { show: false }
+    },
+    yAxis: {
+      type: 'value',
+      axisLine: { show: false }, axisTick: { show: false },
+      axisLabel: { color: P.dim, fontSize: 10 },
+      splitLine: { lineStyle: { color: P.border, type: 'dashed', opacity: 0.4 } }
+    },
+    series: [
+      {
+        name: '死亡', type: 'line', smooth: true, data: killed,
+        symbol: 'circle', symbolSize: 4, showSymbol: false,
+        lineStyle: { color: P.red3, width: 2 },
+        itemStyle: { color: P.red3 },
+        areaStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+          { offset: 0, color: 'rgba(194,48,40,0.45)' }, { offset: 1, color: 'rgba(194,48,40,0.02)' }]) },
+        markPoint: {
+          symbol: 'pin', symbolSize: 46, data: [{ coord: [peakIdx, peak.killed], value: peak.killed }],
+          itemStyle: { color: P.red4 },
+          label: { color: '#fff', fontSize: 11, fontWeight: 600 }
+        },
+        markLine: {
+          silent: true, symbol: 'none',
+          lineStyle: { color: P.red4, type: 'dashed', opacity: 0.5 },
+          label: { color: P.red5, fontSize: 10, formatter: `${peak.date.substring(5)} 单日 ${peak.killed} 人遇难` },
+          data: [{ xAxis: peakIdx }]
+        },
+        z: 3
+      },
+      {
+        name: '受伤', type: 'line', smooth: true, data: injured,
+        symbol: 'circle', symbolSize: 4, showSymbol: false,
+        lineStyle: { color: P.red5, width: 1.6, opacity: 0.85 },
+        itemStyle: { color: P.red5 },
+        areaStyle: { color: 'rgba(245,168,160,0.06)' },
+        z: 2
+      }
+    ]
+  });
+  return chart;
+}
+
+// ============================================================
+// 7. ATTACK TYPE — distribution bar (primary method)
+// ============================================================
+function createAttackTypeChart(containerId) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  const chart = echarts.init(el);
+  const types = TERROR_DATA.attackTypes.filter(t => t[0] !== 'Unknown').slice(0, 7);
+  const total = TERROR_DATA.summary.totalAttacks;
+  const names = types.map(t => ATTACK_CN[t[0]] || t[0]).reverse();
+  const values = types.map(t => t[1]).reverse();
+  const maxVal = Math.max(...values);
+
+  chart.setOption({
+    backgroundColor: 'transparent',
+    tooltip: {
+      trigger: 'axis', axisPointer: { type: 'shadow' },
+      backgroundColor: 'rgba(10,13,18,0.95)', borderColor: P.border,
+      textStyle: { color: P.text, fontSize: 13 },
+      formatter: params => {
+        const p = params[0];
+        const pct = (p.value / total * 100).toFixed(1);
+        return `<div style="font-weight:600;color:${P.red4}">${p.name}</div>
+          <div style="margin-top:4px">${p.value} 起 (${pct}%)</div>`;
+      }
+    },
+    grid: { left: 96, right: 56, top: 10, bottom: 10 },
+    xAxis: { type: 'value', axisLine: { show: false }, axisTick: { show: false },
+      axisLabel: { color: P.dim, fontSize: 11 },
+      splitLine: { lineStyle: { color: P.border, type: 'dashed' } } },
+    yAxis: { type: 'category', data: names,
+      axisLine: { show: false }, axisTick: { show: false },
+      axisLabel: { color: P.text, fontSize: 12 } },
+    series: [{
+      type: 'bar', barMaxWidth: 20,
+      data: values.map(v => ({ value: v, itemStyle: {
+        color: new echarts.graphic.LinearGradient(0, 0, 1, 0, [
+          { offset: 0, color: P.red1 }, { offset: 1, color: v / maxVal > 0.5 ? P.red3 : P.red2 }]),
+        borderRadius: [0, 4, 4, 0] } })),
+      emphasis: { itemStyle: { color: P.red4 } },
+      label: { show: true, position: 'right', color: P.dim, fontSize: 12,
+        formatter: p => `${p.value}  (${(p.value / total * 100).toFixed(0)}%)` },
+      animationDuration: 1100, animationDelay: i => i * 110, animationEasing: 'cubicOut'
+    }]
+  });
+  return chart;
+}
+
+// ============================================================
+// 8. LETHALITY — most frequent vs most deadly (deaths per attack)
+// ============================================================
+function createLethalityChart(containerId) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  const chart = echarts.init(el);
+  // Compare attack methods: frequency (bar) vs deaths-per-attack (line)
+  const order = ['Bombing/Explosion', 'Armed Assault', 'Assassination',
+    'Hostage Taking (Kidnapping)', 'Facility/Infrastructure Attack'];
+  const byType = {};
+  TERROR_DATA.lethalByType.forEach(d => byType[d.name] = d);
+  const rows = order.filter(n => byType[n]).map(n => byType[n]);
+  const names = rows.map(d => ATTACK_CN[d.name] || d.name);
+  const freq = rows.map(d => d.attacks);
+  const lethal = rows.map(d => d.perAttack);
+
+  chart.setOption({
+    backgroundColor: 'transparent',
+    tooltip: {
+      trigger: 'axis', axisPointer: { type: 'shadow' },
+      backgroundColor: 'rgba(10,13,18,0.95)', borderColor: P.border,
+      textStyle: { color: P.text, fontSize: 13 },
+      formatter: params => {
+        const i = params[0].dataIndex;
+        return `<div style="font-weight:600;color:${P.red4}">${names[i]}</div>
+          <div style="margin-top:4px">发生 <b>${freq[i]}</b> 起</div>
+          <div>平均每起致死 <b style="color:${P.warm}">${lethal[i]}</b> 人</div>`;
+      }
+    },
+    legend: { data: ['袭击次数', '每起致死人数'], textStyle: { color: P.dim }, top: 0 },
+    grid: { left: 48, right: 52, top: 40, bottom: 50 },
+    xAxis: { type: 'category', data: names,
+      axisLine: { lineStyle: { color: P.border } },
+      axisLabel: { color: P.dim, fontSize: 11, interval: 0, rotate: 0,
+        formatter: v => v.length > 4 ? v.slice(0, 4) + '\n' + v.slice(4) : v },
+      axisTick: { show: false } },
+    yAxis: [
+      { type: 'value', name: '次数', nameTextStyle: { color: P.dim, fontSize: 10 },
+        axisLine: { show: false }, axisTick: { show: false },
+        axisLabel: { color: P.dim, fontSize: 10 },
+        splitLine: { lineStyle: { color: P.border, type: 'dashed', opacity: 0.4 } } },
+      { type: 'value', name: '人/起', nameTextStyle: { color: P.warm, fontSize: 10 },
+        axisLine: { show: false }, axisTick: { show: false },
+        axisLabel: { color: P.warm, fontSize: 10 }, splitLine: { show: false } }
+    ],
+    series: [
+      { name: '袭击次数', type: 'bar', yAxisIndex: 0, data: freq, barMaxWidth: 38,
+        itemStyle: { color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+          { offset: 0, color: P.red3 }, { offset: 1, color: P.red1 }]), borderRadius: [4, 4, 0, 0] },
+        animationDuration: 1000 },
+      { name: '每起致死人数', type: 'line', yAxisIndex: 1, data: lethal,
+        smooth: true, symbol: 'circle', symbolSize: 9,
+        lineStyle: { color: P.warm, width: 2.5 },
+        itemStyle: { color: P.warm, borderColor: P.bg, borderWidth: 2 },
+        label: { show: true, position: 'top', color: P.warm, fontSize: 12, fontWeight: 600,
+          formatter: p => p.value },
+        z: 5, animationDuration: 1400 }
+    ]
   });
   return chart;
 }
