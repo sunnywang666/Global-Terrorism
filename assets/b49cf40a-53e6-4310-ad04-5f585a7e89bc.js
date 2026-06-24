@@ -214,7 +214,7 @@ function createForceChart(containerId) {
     const n = linkCount[key];
     return {
       source, target, value: n,
-      lineStyle: { width: 1 + Math.sqrt(n) * 1.4, opacity: 0.18 + 0.5 * (n / maxLink) }
+      lineStyle: { width: 1.4 + Math.sqrt(n) * 1.6, opacity: 0.4 + 0.45 * (n / maxLink) }
     };
   });
 
@@ -261,7 +261,7 @@ function createForceChart(containerId) {
       nodes: [...countryNodes, ...perpNodes],
       links: links,
       force: { repulsion: 150, gravity: 0.22, edgeLength: [40, 105], layoutAnimation: true },
-      lineStyle: { color: 'rgba(194,48,40,0.15)', width: 1.5, curveness: 0.2 },
+      lineStyle: { color: P.red4, width: 1.5, curveness: 0.18 },
       label: { color: P.text, fontSize: 11 },
       emphasis: {
         focus: 'adjacency',
