@@ -187,6 +187,19 @@ async function initGlobe(containerId) {
 
   chart.setOption(option);
 
+  // Click a country dot → surface its single deadliest event (uses the global
+  // detail panel defined in index.html). Falls back silently if raw is absent.
+  const worstByCountry = {};
+  (TERROR_DATA.raw || []).forEach(d => {
+    const cur = worstByCountry[d.country];
+    if (!cur || (d.killed + d.injured) > (cur.killed + cur.injured)) worstByCountry[d.country] = d;
+  });
+  chart.on('click', p => {
+    if (!p.data || !p.data.name) return;
+    const e = worstByCountry[p.data.name];
+    if (e && typeof window.showEventDetail === 'function') window.showEventDetail(e);
+  });
+
   // Wire up scroll-driven story (sticky map flies to each hotspot region)
   setupMapStory(chart, effectData, normalData);
 

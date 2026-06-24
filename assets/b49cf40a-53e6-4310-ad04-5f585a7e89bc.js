@@ -36,18 +36,29 @@ function createEmberChart(containerId) {
   const dateMap = {};
   dateSet.forEach((d, i) => dateMap[d] = i);
 
-  // Y axis now encodes a REAL variable — single-event casualties (killed + injured).
-  // X keeps the date order but gets a small deterministic-ish jitter so same-day
-  // attacks fan out instead of stacking on one vertical line.
+  // Y axis encodes a REAL variable — single-event casualties (killed + injured).
+  // X keeps the date order plus a DETERMINISTIC jitter (hashed from the event id)
+  // so same-day attacks fan out — and stay put across reloads (no Math.random).
+  const jitterOf = (seed) => {
+    // cheap deterministic hash → [-0.36, 0.36]
+    let h = 0;
+    for (let i = 0; i < seed.length; i++) h = (h * 31 + seed.charCodeAt(i)) >>> 0;
+    return ((h % 1000) / 1000 - 0.5) * 0.72;
+  };
   const scatterData = raw.map(d => {
     const cas = d.killed + d.injured;
-    const jitter = (Math.random() - 0.5) * 0.72; // horizontal spread within the day
     return {
-      value: [dateMap[d.date] + jitter, cas, Math.max(cas, 1),
-        d.country, d.attackType, d.killed, d.injured, d.date, d.region]
+      // value[10]=id, [9]=city, [11]=perpetrator, [12]=target, [13]=weapon — for the click-through detail panel
+      value: [dateMap[d.date] + jitterOf(d.id), cas, Math.max(cas, 1),
+        d.country, d.attackType, d.killed, d.injured, d.date, d.region,
+        d.city, d.id, d.perpetrator, d.target, d.weapon]
     };
   });
   const maxCas = Math.max(...scatterData.map(s => s.value[1]), 1);
+  // The single deadliest event — used by the scroll story to spotlight ONE point.
+  let peakEvent = scatterData[0];
+  scatterData.forEach(s => { if (s.value[1] > peakEvent.value[1]) peakEvent = s; });
+  chart.__peakId = peakEvent.value[10];
 
   chart.setOption({
     backgroundColor: 'transparent',
@@ -591,15 +602,19 @@ function setupLethalityStory(chart) {
 function setupEmberStory(chart) {
   if (!chart || !chart.__scatterData) return;
   const data = chart.__scatterData;
-  const dc = TERROR_DATA.dailyCasualties;
-  let peak = dc[0];
-  dc.forEach(d => { if (d.killed > peak.killed) peak = d; });
-  const peakDate = peak.date;
-  const withOpacity = fn => ({ series: [{ data: data.map(d => ({ value: d.value, itemStyle: { opacity: fn(d.value) } })) }] });
+  const peakId = chart.__peakId; // the ONE deadliest event (Bekoji, 222+38)
+  const withStyle = fn => ({ series: [{ data: data.map(d => {
+    const st = fn(d.value); // {opacity, ring?}
+    return { value: d.value, itemStyle: Object.assign({ opacity: st.opacity }, st.ring ? {
+      borderColor: P.red5, borderWidth: 2, shadowBlur: 30, shadowColor: 'rgba(232,93,74,0.9)' } : {}) };
+  }) }] });
   const STATES = {
-    'ember-all':    withOpacity(() => 0.8),
-    'ember-severe': withOpacity(v => v[2] >= 10 ? 0.92 : 0.05),
-    'ember-peak':   withOpacity(v => v[7] === peakDate ? 1 : 0.04)
+    // everything visible
+    'ember-all':    withStyle(() => ({ opacity: 0.8 })),
+    // only the severe tail (>=10 casualties)
+    'ember-severe': withStyle(v => ({ opacity: v[2] >= 10 ? 0.92 : 0.05 })),
+    // a single point — the deadliest event of all 700
+    'ember-peak':   withStyle(v => ({ opacity: v[10] === peakId ? 1 : 0.04, ring: v[10] === peakId }))
   };
   window.addEventListener('storystate', e => {
     if (e.detail && e.detail.section === 'sec-ember' && STATES[e.detail.state]) chart.setOption(STATES[e.detail.state]);
