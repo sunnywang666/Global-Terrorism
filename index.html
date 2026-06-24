@@ -5827,16 +5827,38 @@
     .story-anno .a-sub{margin-top:6px;font-size:14px;color:var(--red-lt);text-shadow:0 1px 12px rgba(0,0,0,.95)}
     .story-steps{position:relative;z-index:2;margin-top:-100vh;pointer-events:none}
     .story-step{min-height:92vh;display:flex;align-items:flex-end;justify-content:center;padding:0 16px 9vh}
-    .story-card{pointer-events:auto;width:min(540px,92vw);margin:0 auto;text-align:left;background:rgba(17,20,27,.82);-webkit-backdrop-filter:blur(12px) saturate(1.15);backdrop-filter:blur(12px) saturate(1.15);border:1px solid rgba(255,255,255,.11);border-left:3px solid var(--red);border-radius:12px;padding:24px 26px 24px 27px;line-height:1.9;box-shadow:0 22px 55px -14px rgba(0,0,0,.85),0 1px 0 rgba(255,255,255,.05) inset}
+    /* Full-bleed (map) cards: clean centered scrim — no accent bar */
+    .story-card{pointer-events:auto;width:min(520px,92vw);margin:0 auto;text-align:center;background:rgba(13,16,22,.66);-webkit-backdrop-filter:blur(9px) saturate(1.1);backdrop-filter:blur(9px) saturate(1.1);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:26px 30px;line-height:1.9;box-shadow:0 18px 44px -18px rgba(0,0,0,.7)}
     .story-card .s-num{margin-bottom:10px}
     .story-card .s-title{margin-bottom:12px}
-    .story-card p{font-size:16px;color:#d8d5d0;margin:0}
+    .story-card p{font-size:16px;color:#dad7d2;margin:0}
     .story-card b{color:var(--red-lt);font-weight:600}
-    @media(max-width:768px){ .story-card{width:min(440px,94vw);padding:20px 20px 20px 21px} .story-card p{font-size:14px} }
-    /* chart-type sticky story: chart pinned upper, text bands scroll at bottom */
-    .story-graphic.is-chart{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:10vh;box-sizing:border-box}
-    .story-chart{width:min(940px,92vw);height:58vh;max-height:520px}
+    #sec-map .story-step:first-child{align-items:center;min-height:100vh;padding-bottom:0}
+    @media(max-width:768px){ .story-card{width:min(440px,94vw);padding:20px 22px} .story-card p{font-size:14px} }
+
+    /* ---- Split layout: chart pinned LEFT, text steps scroll on the RIGHT ---- */
+    .story-section.split{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);align-items:start}
+    .story-section.split .story-graphic{grid-column:1;height:100vh}
+    .story-section.split .story-steps{grid-column:2;margin-top:0}
+    .story-section.split .story-step{min-height:88vh;align-items:center;justify-content:flex-start;padding:0 clamp(22px,4vw,60px);opacity:.2;transition:opacity .5s ease}
+    .story-section.split .story-step:first-child{min-height:100vh}
+    .story-section.split .story-step.is-active{opacity:1}
+    .story-section.split .story-card{width:100%;max-width:400px;margin:0;text-align:left;background:none;-webkit-backdrop-filter:none;backdrop-filter:none;border:none;border-radius:0;padding:0;box-shadow:none;line-height:1.95}
+    .story-section.split .story-card p{font-size:17px;color:#e4e1dc}
+
+    /* chart graphic centred in its column */
+    .story-graphic.is-chart{display:flex;flex-direction:column;align-items:center;justify-content:center;box-sizing:border-box;padding:0 clamp(8px,2vw,30px)}
+    .story-chart{width:100%;max-width:760px;height:64vh;max-height:560px}
     @media(max-width:768px){ .story-chart{height:52vh} }
+
+    /* Mobile: collapse split back to full-bleed overlay with a readable card */
+    @media(max-width:860px){
+      .story-section.split{display:block}
+      .story-section.split .story-graphic{position:sticky;top:0;height:100vh}
+      .story-section.split .story-steps{margin-top:-100vh}
+      .story-section.split .story-step{min-height:92vh;justify-content:center;align-items:flex-end;padding:0 16px 9vh;opacity:1}
+      .story-section.split .story-card{max-width:520px;text-align:center;background:rgba(13,16,22,.7);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:20px 22px}
+    }
     /* clean de-carded figure (replaces .cf cards for simple charts) */
     .figure{margin-top:20px;margin-bottom:8px}
     .fig-cap{font-size:12px;color:var(--dim);margin-bottom:14px}
@@ -5864,7 +5886,7 @@
 </section>
 
 <!-- 01: EMBERS — scrollytelling -->
-<section id="sec-ember" class="story-section" data-chapter="01">
+<section id="sec-ember" class="story-section split" data-chapter="01">
   <div class="story-graphic is-chart">
     <div id="chart-ember" class="story-chart"></div>
   </div>
@@ -5882,7 +5904,7 @@
 </section>
 
 <!-- 02: CASUALTY TREND — scrollytelling -->
-<section id="sec-trend" class="story-section" data-chapter="02">
+<section id="sec-trend" class="story-section split" data-chapter="02">
   <div class="story-graphic is-chart">
     <div id="chart-trend" class="story-chart"></div>
   </div>
@@ -5948,7 +5970,7 @@
 </section>
 
 <!-- 05: FORCE NETWORK — scrollytelling -->
-<section id="sec-force" class="story-section" data-chapter="05">
+<section id="sec-force" class="story-section split" data-chapter="05">
   <div class="story-graphic is-chart">
     <div id="chart-force" class="story-chart"></div>
   </div>
@@ -6005,7 +6027,7 @@
 </div>
 
 <!-- 09: LETHALITY — scrollytelling -->
-<section id="sec-leth" class="story-section" data-chapter="09">
+<section id="sec-leth" class="story-section split" data-chapter="09">
   <div class="story-graphic is-chart">
     <div id="chart-lethality" class="story-chart"></div>
   </div>

@@ -174,6 +174,10 @@ class ScrollEngine {
             const stateId = entry.target.dataset.state;
             const sectionEl = entry.target.closest('.story-section');
             if (sectionEl && stateId) {
+              // light up the active step, dim the ones scrolled past
+              sectionEl.querySelectorAll('.story-step').forEach(s => {
+                s.classList.toggle('is-active', s === entry.target);
+              });
               const event = new CustomEvent('storystate', { detail: { state: stateId, section: sectionEl.id } });
               window.dispatchEvent(event);
             }
