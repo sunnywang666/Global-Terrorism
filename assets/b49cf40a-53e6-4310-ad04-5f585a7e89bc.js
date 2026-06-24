@@ -172,7 +172,7 @@ function buildWeaponViz(containerId) {
     const barWidth = (count / data[0][1] * 100);
     const opacity = 1 - i * 0.12;
 
-    html += `<div class="weapon-row reveal">
+    html += `<div class="weapon-row" data-wi="${i}">
       <div class="weapon-icon" style="opacity:${opacity}">${WEAPON_ICONS[name] || WEAPON_ICONS['Unknown']}</div>
       <div class="weapon-info">
         <div class="weapon-name">${WEAPON_CN[name] || name}<span class="weapon-en">${name}</span></div>
@@ -623,6 +623,38 @@ function setupForceStory(chart) {
     if (e.detail && e.detail.section === 'sec-force' && (e.detail.state in FOCUS)) apply(e.detail.state);
   });
   apply('force-intro');
+}
+
+// Generic bar-chart story: highlight bar(s) per scroll step.
+// focusMap maps state id -> dataIndex (number), array of dataIndex, or null.
+function setupBarStory(chart, sectionId, focusMap) {
+  if (!chart) return;
+  function apply(id) {
+    chart.dispatchAction({ type: 'downplay', seriesIndex: 0 });
+    const idx = focusMap[id];
+    if (idx != null) chart.dispatchAction({ type: 'highlight', seriesIndex: 0, dataIndex: idx });
+  }
+  window.addEventListener('storystate', e => {
+    if (e.detail && e.detail.section === sectionId && (e.detail.state in focusMap)) apply(e.detail.state);
+  });
+  apply(Object.keys(focusMap)[0]);
+}
+
+// Weapon infographic story: dim non-focused rows per scroll step.
+function setupWeaponStory(containerId, sectionId) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  const FOCUS = { 'weapon-intro': null, 'weapon-explosives': [0], 'weapon-firearms': [0, 1] };
+  function apply(id) {
+    const f = FOCUS[id];
+    el.querySelectorAll('.weapon-row').forEach((row, i) => {
+      row.style.opacity = (!f || f.indexOf(i) !== -1) ? '1' : '0.2';
+    });
+  }
+  window.addEventListener('storystate', e => {
+    if (e.detail && e.detail.section === sectionId && (e.detail.state in FOCUS)) apply(e.detail.state);
+  });
+  apply('weapon-intro');
 }
 
 // ============================================================

@@ -5778,7 +5778,8 @@
     .iso-wrap{margin-bottom:28px}
 
     /* Weapon */
-    .weapon-row{display:flex;align-items:center;gap:18px;padding:16px 0;border-bottom:1px solid var(--border)}
+    .weapon-viz-chart{width:100%;max-width:540px;margin:0 auto}
+    .weapon-row{display:flex;align-items:center;gap:18px;padding:16px 0;border-bottom:1px solid var(--border);transition:opacity .45s ease}
     .weapon-row:last-child{border-bottom:none}
     .weapon-icon{width:48px;height:48px;color:var(--red);flex-shrink:0}
     .weapon-icon svg{width:100%;height:100%}
@@ -5995,44 +5996,59 @@
   </div>
 </section>
 
-<!-- 05: WEAPONS -->
-<div class="sec">
-  <div class="reveal">
-    <div class="s-num">06 / 暴力的工具</div>
-    <h2 class="s-title">武器选择：爆炸物与枪械的统治</h2>
-    <p class="s-desc">爆炸物和枪械是恐怖袭击中最常使用的武器，合计超过总数的 <b>70%</b>。</p>
+<!-- 06: WEAPONS — scrollytelling -->
+<section id="sec-weapon" class="story-section split" data-chapter="06">
+  <div class="story-graphic is-chart">
+    <div id="weapon-viz" class="weapon-viz-chart"></div>
   </div>
-  <div class="figure reveal delay-1">
-    <div class="fig-cap">武器类型分布 · 图标式信息图 · 柱条长度代表使用频次</div>
-    <div id="weapon-viz"></div>
+  <div class="story-steps">
+    <div class="story-step" data-state="weapon-intro">
+      <div class="story-card"><div class="s-num">06 / 暴力的工具</div><h2 class="s-title">武器选择：爆炸物与枪械的统治</h2><p>每一种武器对应一类伤害方式。<b>柱条越长，使用越频繁。</b></p></div>
+    </div>
+    <div class="story-step" data-state="weapon-explosives">
+      <div class="story-card"><p><b>爆炸物</b>是头号凶器——<b>317 次</b>使用，远超其余。它无差别、可远程引爆，是恐怖袭击最"标志性"的手段。</p></div>
+    </div>
+    <div class="story-step" data-state="weapon-firearms">
+      <div class="story-card"><p>其次是<b>枪械 223 次</b>。爆炸物与枪械两者相加，<b>占全部武器的七成以上</b>——绝大多数暴力，由这两类工具完成。</p></div>
+    </div>
   </div>
-</div>
+</section>
 
-<!-- 07: ATTACK TYPE -->
-<div class="sec">
-  <div class="reveal">
-    <div class="s-num">07 / 暴力的手法</div>
-    <h2 class="s-title">袭击如何实施</h2>
-    <p class="s-desc">按主要手法划分，<b>爆炸袭击</b>占据绝对主导（281起，约40%），其次是<b>武装袭击</b>。绑架、暗杀虽数量较少，却往往针对特定个体，带来不同性质的恐惧。</p>
+<!-- 07: ATTACK TYPE — scrollytelling -->
+<section id="sec-attack" class="story-section split" data-chapter="07">
+  <div class="story-graphic is-chart">
+    <div id="chart-attacktype" class="story-chart"></div>
   </div>
-  <div class="figure reveal delay-1">
-    <div class="fig-cap">袭击类型分布（主要手法）· 横向柱状图 · 悬停查看占比</div>
-    <div id="chart-attacktype" class="chart h400"></div>
+  <div class="story-steps">
+    <div class="story-step" data-state="attack-intro">
+      <div class="story-card"><div class="s-num">07 / 暴力的手法</div><h2 class="s-title">袭击如何实施</h2><p>按主要手法划分，七类方式构成了全部袭击的版图。</p></div>
+    </div>
+    <div class="story-step" data-state="attack-bombing">
+      <div class="story-card"><p><b>爆炸袭击 281 起</b>，约占四成——绝对主导，与"爆炸物"这一头号武器彼此印证。</p></div>
+    </div>
+    <div class="story-step" data-state="attack-armed">
+      <div class="story-card"><p>其次是<b>武装袭击 157 起</b>。绑架、暗杀虽数量较少，却往往针对特定个体，带来不同性质的恐惧。</p></div>
+    </div>
   </div>
-</div>
+</section>
 
-<!-- 08: TARGET -->
-<div class="sec">
-  <div class="reveal">
-    <div class="s-num">08 / 谁是靶心？</div>
-    <h2 class="s-title">攻击目标：暴力的代价由谁承担</h2>
+<!-- 08: TARGET — scrollytelling -->
+<section id="sec-target" class="story-section split" data-chapter="08">
+  <div class="story-graphic is-chart">
+    <div id="chart-target" class="story-chart"></div>
   </div>
-  <div class="figure reveal delay-1">
-    <div class="fig-cap">攻击目标分布 · 横向柱状图 · 悬停查看详细占比</div>
-    <div id="chart-target" class="chart h400"></div>
-    <div class="callout">超过 <b>26%</b> 的袭击以平民为目标，军事目标和警察紧随其后——大量恐怖活动是针对无辜民众的无差别暴力。</div>
+  <div class="story-steps">
+    <div class="story-step" data-state="target-intro">
+      <div class="story-card"><div class="s-num">08 / 谁是靶心？</div><h2 class="s-title">攻击目标：暴力的代价由谁承担</h2><p>恐怖袭击的矛头，最终指向谁？</p></div>
+    </div>
+    <div class="story-step" data-state="target-civilian">
+      <div class="story-card"><p>超过 <b>26%</b> 的袭击以<b>平民与私人财产</b>为目标（182 起）——大量恐怖活动是针对无辜民众的无差别暴力。</p></div>
+    </div>
+    <div class="story-step" data-state="target-state">
+      <div class="story-card"><p><b>军事（141 起）</b>与<b>警察（87 起）</b>目标紧随其后。国家机器与平民，同时承受着暴力的代价。</p></div>
+    </div>
   </div>
-</div>
+</section>
 
 <!-- 09: LETHALITY — scrollytelling -->
 <section id="sec-leth" class="story-section split" data-chapter="09">
@@ -6092,8 +6108,11 @@ document.addEventListener('DOMContentLoaded', function() {
   initGlobe('globe-container');
   setupForceStory(createForceChart('chart-force'));
   buildWeaponViz('weapon-viz');
-  createAttackTypeChart('chart-attacktype');
-  createTargetChart('chart-target');
+  setupWeaponStory('weapon-viz', 'sec-weapon');
+  setupBarStory(createAttackTypeChart('chart-attacktype'), 'sec-attack',
+    { 'attack-intro': null, 'attack-bombing': 6, 'attack-armed': 5 });
+  setupBarStory(createTargetChart('chart-target'), 'sec-target',
+    { 'target-intro': null, 'target-civilian': 7, 'target-state': [6, 5] });
   setupLethalityStory(createLethalityChart('chart-lethality'));
   setupChartResize();
 });
