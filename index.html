@@ -5827,20 +5827,16 @@
     .story-anno .a-sub{margin-top:6px;font-size:14px;color:var(--red-lt);text-shadow:0 1px 12px rgba(0,0,0,.95)}
     .story-steps{position:relative;z-index:2;margin-top:-100vh;pointer-events:none}
     .story-step{min-height:92vh;display:flex;align-items:flex-end;justify-content:center;padding:0 16px 9vh}
-    .story-step:first-child{align-items:center;padding-bottom:0;min-height:100vh}
-    .story-card{pointer-events:auto;width:min(620px,94vw);margin:0 auto;text-align:center;background:radial-gradient(120% 100% at 50% 50%,rgba(10,13,18,.92) 0%,rgba(10,13,18,.86) 55%,rgba(10,13,18,0) 100%);-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px);border:none;border-radius:0;padding:34px 30px;line-height:1.95}
+    .story-card{pointer-events:auto;width:min(540px,92vw);margin:0 auto;text-align:left;background:rgba(17,20,27,.82);-webkit-backdrop-filter:blur(12px) saturate(1.15);backdrop-filter:blur(12px) saturate(1.15);border:1px solid rgba(255,255,255,.11);border-left:3px solid var(--red);border-radius:12px;padding:24px 26px 24px 27px;line-height:1.9;box-shadow:0 22px 55px -14px rgba(0,0,0,.85),0 1px 0 rgba(255,255,255,.05) inset}
     .story-card .s-num{margin-bottom:10px}
     .story-card .s-title{margin-bottom:12px}
-    .story-card p{font-size:16px;color:#dad7d2;margin:0;text-shadow:0 1px 14px rgba(0,0,0,.9)}
+    .story-card p{font-size:16px;color:#d8d5d0;margin:0}
     .story-card b{color:var(--red-lt);font-weight:600}
-    @media(max-width:768px){ .story-card{padding:26px 18px} .story-card p{font-size:14px} }
+    @media(max-width:768px){ .story-card{width:min(440px,94vw);padding:20px 20px 20px 21px} .story-card p{font-size:14px} }
     /* chart-type sticky story: chart pinned upper, text bands scroll at bottom */
-    .story-graphic.is-chart{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:7vh;box-sizing:border-box}
-    .story-chart{width:min(940px,92vw);height:60vh;max-height:520px}
-    .story-ghead{width:min(940px,92vw);text-align:left;margin-bottom:6px}
-    .story-ghead .s-num{margin-bottom:6px}
-    .story-ghead .s-title{font-size:clamp(18px,2.6vw,26px);margin-bottom:0}
-    @media(max-width:768px){ .story-chart{height:54vh} }
+    .story-graphic.is-chart{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:10vh;box-sizing:border-box}
+    .story-chart{width:min(940px,92vw);height:58vh;max-height:520px}
+    @media(max-width:768px){ .story-chart{height:52vh} }
     /* clean de-carded figure (replaces .cf cards for simple charts) */
     .figure{margin-top:20px;margin-bottom:8px}
     .fig-cap{font-size:12px;color:var(--dim);margin-bottom:14px}
@@ -5870,15 +5866,11 @@
 <!-- 01: EMBERS — scrollytelling -->
 <section id="sec-ember" class="story-section" data-chapter="01">
   <div class="story-graphic is-chart">
-    <div class="story-ghead">
-      <div class="s-num">01 / 坠落的余烬</div>
-      <h2 class="s-title">每一天，暴力从未停歇</h2>
-    </div>
     <div id="chart-ember" class="story-chart"></div>
   </div>
   <div class="story-steps">
     <div class="story-step" data-state="ember-all">
-      <div class="story-card"><p>每一颗光点都是一次真实袭击：<b>横轴是日期，纵轴是单次伤亡人数</b>，点越高越惨重。35 天里，没有一天是平静的。</p></div>
+      <div class="story-card"><div class="s-num">01 / 坠落的余烬</div><h2 class="s-title">每一天，暴力从未停歇</h2><p>每一颗光点都是一次真实袭击：<b>横轴是日期，纵轴是单次伤亡人数</b>，点越高越惨重。35 天里，没有一天是平静的。</p></div>
     </div>
     <div class="story-step" data-state="ember-severe">
       <div class="story-card"><p>把<b>伤亡 ≥ 10 人</b>的袭击单独点亮——它们只是少数，却贡献了绝大部分伤亡。代价高度集中在少数极端事件上。</p></div>
@@ -5892,15 +5884,11 @@
 <!-- 02: CASUALTY TREND — scrollytelling -->
 <section id="sec-trend" class="story-section" data-chapter="02">
   <div class="story-graphic is-chart">
-    <div class="story-ghead">
-      <div class="s-num">02 / 起伏的伤亡</div>
-      <h2 class="s-title">35天，伤亡曲线的剧烈震荡</h2>
-    </div>
     <div id="chart-trend" class="story-chart"></div>
   </div>
   <div class="story-steps">
     <div class="story-step" data-state="trend-intro">
-      <div class="story-card"><p>先只看<b>死亡曲线</b>。35 天里，它<b>从未归零</b>——暴力没有一天停歇，只是强度起伏。</p></div>
+      <div class="story-card"><div class="s-num">02 / 起伏的伤亡</div><h2 class="s-title">35天，伤亡曲线的剧烈震荡</h2><p>先只看<b>死亡曲线</b>。35 天里，它<b>从未归零</b>——暴力没有一天停歇，只是强度起伏。</p></div>
     </div>
     <div class="story-step" data-state="trend-peak">
       <div class="story-card"><p>然后，曲线在 <b>12 月 23 日</b>骤然冲高——单日 <b>265 人遇难</b>，接近日均（约 55 人）的 <b>5 倍</b>。少数极端事件，主导了整段时期的伤亡。</p></div>
@@ -5962,15 +5950,11 @@
 <!-- 05: FORCE NETWORK — scrollytelling -->
 <section id="sec-force" class="story-section" data-chapter="05">
   <div class="story-graphic is-chart">
-    <div class="story-ghead">
-      <div class="s-num">05 / 暴力的网络</div>
-      <h2 class="s-title">恐怖组织与国家的关联图谱</h2>
-    </div>
     <div id="chart-force" class="story-chart"></div>
   </div>
   <div class="story-steps">
     <div class="story-step" data-state="force-intro">
-      <div class="story-card"><p><b style="color:var(--red)">红色</b>是恐怖组织，<b style="color:var(--dim)">灰色</b>是国家；连线表示该组织在该国发动过袭击，<b>线越粗次数越多</b>。可拖拽节点查看。</p></div>
+      <div class="story-card"><div class="s-num">05 / 暴力的网络</div><h2 class="s-title">恐怖组织与国家的关联图谱</h2><p><b style="color:var(--red)">红色</b>是恐怖组织，<b style="color:var(--dim)">灰色</b>是国家；连线表示该组织在该国发动过袭击，<b>线越粗次数越多</b>。可拖拽节点查看。</p></div>
     </div>
     <div class="story-step" data-state="force-taliban">
       <div class="story-card"><p><b>塔利班</b>是最活跃的组织——140 起袭击<b>全部集中在阿富汗</b>，一条又粗又孤立的连线。</p></div>
@@ -6023,15 +6007,11 @@
 <!-- 09: LETHALITY — scrollytelling -->
 <section id="sec-leth" class="story-section" data-chapter="09">
   <div class="story-graphic is-chart">
-    <div class="story-ghead">
-      <div class="s-num">09 / 最常见 ≠ 最致命</div>
-      <h2 class="s-title">数量与杀伤力的背离</h2>
-    </div>
     <div id="chart-lethality" class="story-chart"></div>
   </div>
   <div class="story-steps">
     <div class="story-step" data-state="leth-freq">
-      <div class="story-card"><p>先按<b>发生次数</b>排：<b>爆炸袭击 281 起</b>遥遥领先，几乎是武装袭击的两倍。直觉上，它似乎最危险。</p></div>
+      <div class="story-card"><div class="s-num">09 / 最常见 ≠ 最致命</div><h2 class="s-title">数量与杀伤力的背离</h2><p>先按<b>发生次数</b>排：<b>爆炸袭击 281 起</b>遥遥领先，几乎是武装袭击的两倍。直觉上，它似乎最危险。</p></div>
     </div>
     <div class="story-step" data-state="leth-deadly">
       <div class="story-card"><p>但叠上<b>每起致死人数</b>这条线，剧情反转：爆炸平均每起仅 <b>1.5 人</b>，而<b>武装袭击高达 5.1 人</b>——是爆炸的 <b>3 倍多</b>。</p></div>
