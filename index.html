@@ -5714,27 +5714,23 @@
     /* Smooth scroll container */
     .page{position:relative;z-index:1}
 
-    /* Hero — full-bleed immersive opening */
+    /* Hero — editorial, Pudding-style opening */
     .hero{
       position:relative;
-      display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
-      min-height:100vh;padding:80px 24px;box-sizing:border-box;
+      display:flex;flex-direction:column;justify-content:center;
+      min-height:100vh;padding:80px clamp(24px,8vw,128px);box-sizing:border-box;
     }
-    .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 68% 58% at 50% 40%,rgba(194,48,40,0.13) 0%,transparent 70%);pointer-events:none;z-index:-1}
-    .h-tag{font-size:11px;letter-spacing:6px;color:var(--red);font-weight:500;margin-bottom:26px;text-transform:uppercase}
-    .h-title{font-family:var(--serif);font-size:clamp(34px,6vw,76px);font-weight:900;line-height:1.12;letter-spacing:-0.02em;margin-bottom:22px}
-    .h-title em{font-style:normal;color:var(--red)}
-    .h-sub{font-size:clamp(13px,1.5vw,16px);color:var(--dim);max-width:600px;line-height:1.9;margin:0 auto 48px}
-    .stats{display:flex;flex-wrap:wrap;justify-content:center;width:auto;max-width:none;margin:0 auto;background:none;border-radius:0;overflow:visible}
-    .stat{background:none;padding:6px clamp(20px,4.5vw,52px);text-align:center;border-left:1px solid var(--border)}
-    .stat:first-child{border-left:none}
-    .stat-n{font-family:var(--serif);font-size:clamp(30px,4.5vw,52px);font-weight:900;line-height:1;margin-bottom:8px;color:var(--red)}
-    .stat-n.pale{color:var(--red-pale)}
-    .stat-n.dim{color:var(--dim)}
-    .stat-l{font-size:10px;color:var(--dim);letter-spacing:2px}
-    .scroll-cue{position:absolute;bottom:34px;left:0;right:0;text-align:center}
+    .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 64% 60% at 32% 42%,rgba(194,48,40,0.15) 0%,transparent 68%);pointer-events:none;z-index:-1}
+    .hero-inner{max-width:780px}
+    .h-kicker{font-size:12px;letter-spacing:6px;color:var(--red);font-weight:600;margin-bottom:30px;text-transform:uppercase}
+    .h-title{font-family:var(--serif);font-size:clamp(56px,12vw,132px);font-weight:900;line-height:0.96;letter-spacing:-0.02em;margin:0 0 16px}
+    .h-sub2{font-family:var(--serif);font-size:clamp(20px,3.4vw,40px);font-weight:400;color:var(--text);opacity:.86;margin-bottom:36px}
+    .h-dek{font-size:clamp(15px,1.6vw,19px);line-height:2;color:var(--dim);max-width:640px;margin:0 0 32px}
+    .h-dek b{color:var(--red-pale);font-weight:700;font-family:var(--serif);font-size:1.08em}
+    .h-byline{font-size:11px;letter-spacing:2px;color:var(--faint);text-transform:uppercase}
+    .scroll-cue{position:absolute;bottom:34px;left:clamp(24px,8vw,128px);text-align:left}
     .scroll-cue span{font-size:10px;color:var(--faint);letter-spacing:4px;display:block;margin-bottom:8px}
-    .scroll-arrow{width:14px;height:14px;border-right:1.5px solid var(--faint);border-bottom:1.5px solid var(--faint);transform:rotate(45deg);margin:0 auto;animation:bounce 2.5s infinite}
+    .scroll-arrow{width:14px;height:14px;border-right:1.5px solid var(--faint);border-bottom:1.5px solid var(--faint);transform:rotate(45deg);margin:0;animation:bounce 2.5s infinite}
 
     /* Content sections — seamless flow */
     .sec{
@@ -5800,19 +5796,24 @@
     /* Glow */
     .glow{position:absolute;width:350px;height:350px;border-radius:50%;filter:blur(120px);opacity:0.025;pointer-events:none;z-index:0;background:var(--red)}
 
-    /* Closing — full-bleed immersive ending, mirrors the hero */
+    /* Closing — editorial wrap-up + credits, mirrors the hero */
     .closing{
       position:relative;
-      display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;
-      min-height:92vh;padding:80px 24px;max-width:none;margin:0;box-sizing:border-box;
+      display:flex;flex-direction:column;justify-content:center;
+      min-height:92vh;padding:80px clamp(24px,8vw,128px);max-width:none;margin:0;box-sizing:border-box;
     }
     .closing::before{
       content:'';position:absolute;inset:0;z-index:-1;pointer-events:none;
-      background:radial-gradient(ellipse 60% 50% at 50% 52%,rgba(194,48,40,0.10) 0%,transparent 70%);
+      background:radial-gradient(ellipse 60% 55% at 32% 50%,rgba(194,48,40,0.12) 0%,transparent 68%);
     }
-    .closing .s-num{letter-spacing:5px}
-    .closing .s-title{font-family:var(--serif);font-size:clamp(28px,4.2vw,50px);font-weight:900;line-height:1.2}
-    .closing .s-desc{font-size:clamp(14px,1.4vw,16px);line-height:2}
+    .closing-inner{max-width:700px}
+    .closing .h-kicker{margin-bottom:18px}
+    .closing-title{font-family:var(--serif);font-size:clamp(32px,5.2vw,62px);font-weight:900;line-height:1.1;margin:0 0 28px}
+    .closing-text{font-size:clamp(15px,1.6vw,18px);line-height:2;color:var(--dim);max-width:580px;margin:0 0 52px}
+    .credits{border-top:1px solid var(--border);padding-top:28px;max-width:540px}
+    .credit-row{display:flex;gap:22px;padding:9px 0;align-items:baseline}
+    .credit-k{flex:0 0 76px;color:var(--red-dk);letter-spacing:2px;text-transform:uppercase;font-size:11px;font-weight:600}
+    .credit-v{color:var(--dim);font-size:13.5px;line-height:1.6}
 
     /* Footer */
     .footer{text-align:center;padding:32px 24px;color:var(--dim);font-size:11px;border-top:1px solid var(--border);max-width:1060px;margin:20px auto 0}
@@ -5882,16 +5883,14 @@
 
 <!-- HERO -->
 <section class="hero">
-  <div class="h-tag reveal">数据新闻 · 交互式可视化</div>
-  <h1 class="h-title reveal delay-1">暗夜之殇<br><em>2020</em>年末全球恐怖袭击图鉴</h1>
-  <p class="h-sub reveal delay-2">2020年11月26日至12月31日的35天里，全球记录了700起恐怖袭击事件。<br>平均每天约20起袭击，共造成1,920人死亡、1,298人受伤。</p>
-  <div class="stats reveal delay-3">
-    <div class="stat"><div class="stat-n counter" data-target="700">0</div><div class="stat-l">袭击事件</div></div>
-    <div class="stat"><div class="stat-n counter" data-target="1920">0</div><div class="stat-l">死亡人数</div></div>
-    <div class="stat"><div class="stat-n pale counter" data-target="1298">0</div><div class="stat-l">受伤人数</div></div>
-    <div class="stat"><div class="stat-n dim counter" data-target="45">0</div><div class="stat-l">涉及国家</div></div>
+  <div class="hero-inner reveal">
+    <div class="h-kicker">数据新闻 · 交互式可视化</div>
+    <h1 class="h-title">暗夜之殇</h1>
+    <div class="h-sub2">2020 年末全球恐怖袭击图鉴</div>
+    <p class="h-dek">2020 年 11 月 26 日至 12 月 31 日，短短 <b class="counter" data-target="35">0</b> 天里，全球记录了 <b class="counter" data-target="700">0</b> 起恐怖袭击，夺走 <b class="counter" data-target="1920">0</b> 条生命，<b class="counter" data-target="1298">0</b> 人受伤，伤痕蔓延至 <b class="counter" data-target="45">0</b> 个国家。这是一段被暴力浸透的年末。</p>
+    <div class="h-byline">数据来源 · CnOpenData 全球恐怖袭击数据库</div>
   </div>
-  <div class="scroll-cue reveal delay-3"><span>向下滚动</span><div class="scroll-arrow"></div></div>
+  <div class="scroll-cue"><span>向下滚动</span><div class="scroll-arrow"></div></div>
 </section>
 
 <!-- 01: EMBERS — scrollytelling -->
@@ -6070,23 +6069,19 @@
 
 <!-- CLOSING -->
 <div class="closing">
-  <div class="reveal">
-    <div class="s-num" style="text-align:center">尾声</div>
-    <h2 class="s-title" style="max-width:480px;margin:14px auto 20px">数据背后，是真实的生命</h2>
-    <p class="s-desc" style="margin:0 auto;text-align:center;max-width:440px">
-      每一个数字都代表着一个家庭的破碎、一段人生的终结。<br>
-      数据可视化不仅是技术，更是让沉默的数字发出声音的方式。<br>
-      愿和平不再是遥远的期盼。
-    </p>
+  <div class="closing-inner reveal">
+    <div class="h-kicker">尾声</div>
+    <h2 class="closing-title">数据背后，<br>是真实的生命</h2>
+    <p class="closing-text">每一个数字都代表着一个家庭的破碎、一段人生的终结。数据可视化不仅是技术，更是让沉默的数字发出声音的方式——愿和平不再是遥远的期盼。</p>
+    <div class="credits">
+      <div class="credit-row"><span class="credit-k">数据来源</span><span class="credit-v">CnOpenData · 全球恐怖袭击数据</span></div>
+      <div class="credit-row"><span class="credit-k">时间范围</span><span class="credit-v">2020.11.26 – 2020.12.31 · 共 35 天 · 700 起事件</span></div>
+      <div class="credit-row"><span class="credit-k">可视化</span><span class="credit-v">ECharts · HTML / CSS / JavaScript</span></div>
+    </div>
   </div>
 </div>
 
 </div><!-- .page -->
-
-<footer class="footer">
-  <p>数据来源：CnOpenData · 全球恐怖袭击数据 · 2020.11.26 — 2020.12.31（共35天 / 700起事件）</p>
-  <p style="margin-top:4px">可视化技术：ECharts · HTML/CSS/JavaScript</p>
-</footer>
 
 
 
