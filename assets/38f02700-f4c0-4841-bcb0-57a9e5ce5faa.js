@@ -92,8 +92,8 @@ async function initGlobe(containerId) {
     geo: {
       map: 'world',
       roam: false, // scroll-driven story controls zoom/center; roam would hijack page scroll
-      zoom: 1.5,
-      center: [55, 25], // Center on Middle East / South Asia
+      zoom: 1.8,
+      center: [55, 22], // Start focused on data-dense belt (S.Asia → MENA → E.Africa)
       silent: false,
       itemStyle: {
         areaColor: P_MAP.land,
@@ -219,7 +219,9 @@ async function initGlobe(containerId) {
 function setupMapStory(chart, effectData, normalData) {
   const anno = document.getElementById('map-anno');
   const STATES = {
-    'map-intro': { center: [30, 18], zoom: 1.05, focus: null, title: '', sub: '' },
+    // Start zoomed into the data-dense belt (S.Asia→Middle East→E.Africa), not the whole world.
+    // Per design guideline: "一开始就把视角放在数据密集的位置".
+    'map-intro': { center: [55, 22], zoom: 1.8, focus: null, title: '', sub: '' },
     'map-sasia': { center: [80, 24], zoom: 2.4, focus: { region: 'South Asia' }, title: '南亚 · 314起', sub: '占全球45%' },
     'map-mena':  { center: [44, 28], zoom: 2.4, focus: { region: 'Middle East & North Africa' }, title: '中东与北非 · 167起', sub: '' },
     'map-ssa':   { center: [22, 2],  zoom: 2.0, focus: { region: 'Sub-Saharan Africa' }, title: '撒哈拉以南非洲 · 155起', sub: '' },
@@ -231,7 +233,7 @@ function setupMapStory(chart, effectData, normalData) {
     return d.region === f.region ? 1 : 0.08;
   };
   // Smoothly tween geo center/zoom (ECharts doesn't animate these on setOption)
-  let cur = { center: [30, 18], zoom: 1.05 };
+  let cur = { center: [55, 22], zoom: 1.8 };
   let raf = null;
   function flyTo(target) {
     if (raf) cancelAnimationFrame(raf);

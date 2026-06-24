@@ -640,14 +640,29 @@ function setupForceStory(chart) {
   apply('force-intro');
 }
 
-// Generic bar-chart story: highlight bar(s) per scroll step.
-// focusMap maps state id -> dataIndex (number), array of dataIndex, or null.
+// Generic bar-chart story: focused bar(s) keep highlight color, all others go gray.
+// Design guideline: "用强调色突出要讲的部分，其余灰色".
+// focusMap maps state id -> dataIndex (number), array of dataIndex, or null (=show all).
 function setupBarStory(chart, sectionId, focusMap) {
   if (!chart) return;
+  // Capture the original data (with styled itemStyle) from the initial option
+  const origData = chart.getOption().series[0].data.map(d =>
+    typeof d === 'object' ? { ...d } : { value: d });
   function apply(id) {
-    chart.dispatchAction({ type: 'downplay', seriesIndex: 0 });
-    const idx = focusMap[id];
-    if (idx != null) chart.dispatchAction({ type: 'highlight', seriesIndex: 0, dataIndex: idx });
+    const focused = focusMap[id];
+    const isFocused = i => {
+      if (focused == null) return true; // intro: all visible
+      if (Array.isArray(focused)) return focused.indexOf(i) !== -1;
+      return i === focused;
+    };
+    const newData = origData.map((d, i) => {
+      const v = typeof d.value !== 'undefined' ? d.value : d;
+      if (isFocused(i)) return { ...d, value: v }; // keep original style
+      // Gray out: flat dark bar, no gradient
+      return { value: v, itemStyle: { color: P.faint, borderRadius: [0, 4, 4, 0] },
+        label: { show: true, color: P.faint } };
+    });
+    chart.setOption({ series: [{ data: newData }] });
   }
   window.addEventListener('storystate', e => {
     if (e.detail && e.detail.section === sectionId && (e.detail.state in focusMap)) apply(e.detail.state);
