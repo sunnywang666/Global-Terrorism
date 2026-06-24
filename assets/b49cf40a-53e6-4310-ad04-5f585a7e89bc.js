@@ -249,7 +249,8 @@ function createForceChart(containerId) {
       }
     },
     legend: {
-      data: ['国家/地区', '恐怖组织'], textStyle: { color: P.dim }, top: 10
+      data: ['国家/地区', '恐怖组织'], textStyle: { color: P.dim, fontSize: 11 },
+      bottom: 16, left: 16, itemWidth: 14, itemHeight: 8, itemGap: 16
     },
     series: [{
       type: 'graph', layout: 'force', roam: 'move', draggable: true,
@@ -259,7 +260,7 @@ function createForceChart(containerId) {
       ],
       nodes: [...countryNodes, ...perpNodes],
       links: links,
-      force: { repulsion: 350, gravity: 0.08, edgeLength: [80, 220], layoutAnimation: true },
+      force: { repulsion: 150, gravity: 0.22, edgeLength: [40, 105], layoutAnimation: true },
       lineStyle: { color: 'rgba(194,48,40,0.15)', width: 1.5, curveness: 0.2 },
       label: { color: P.text, fontSize: 11 },
       emphasis: {
