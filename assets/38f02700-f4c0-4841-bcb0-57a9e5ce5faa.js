@@ -207,10 +207,10 @@ function setupMapStory(chart, effectData, normalData) {
   const anno = document.getElementById('map-anno');
   const STATES = {
     'map-intro': { center: [30, 18], zoom: 1.05, focus: null, title: '', sub: '' },
-    'map-sasia': { center: [80, 24], zoom: 2.4, focus: { region: 'South Asia' }, title: '南亚 · 314 起', sub: '全球最密集的热区' },
-    'map-mena':  { center: [44, 28], zoom: 2.4, focus: { region: 'Middle East & North Africa' }, title: '中东与北非 · 167 起', sub: '' },
-    'map-ssa':   { center: [22, 2],  zoom: 2.0, focus: { region: 'Sub-Saharan Africa' }, title: '撒哈拉以南非洲 · 155 起', sub: '' },
-    'map-afg':   { center: [66, 34], zoom: 4.5, focus: { country: 'Afghanistan' }, title: '阿富汗 · 234 起', sub: '一国即占全球三分之一' }
+    'map-sasia': { center: [80, 24], zoom: 2.4, focus: { region: 'South Asia' }, title: '南亚 · 314起', sub: '占全球45%' },
+    'map-mena':  { center: [44, 28], zoom: 2.4, focus: { region: 'Middle East & North Africa' }, title: '中东与北非 · 167起', sub: '' },
+    'map-ssa':   { center: [22, 2],  zoom: 2.0, focus: { region: 'Sub-Saharan Africa' }, title: '撒哈拉以南非洲 · 155起', sub: '' },
+    'map-afg':   { center: [66, 34], zoom: 4.5, focus: { country: 'Afghanistan' }, title: '阿富汗 · 234起', sub: '一国占全球1/3' }
   };
   const emph = (d, f) => {
     if (!f) return 1;
