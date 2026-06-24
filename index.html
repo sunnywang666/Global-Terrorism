@@ -5758,13 +5758,15 @@
     .s-hint::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--red);box-shadow:0 0 0 4px rgba(194,48,40,.18);animation:hintpulse 2s ease-in-out infinite}
     @keyframes hintpulse{0%,100%{opacity:.4}50%{opacity:1}}
 
-    /* Click-through event detail — works on desktop (side card) and mobile (bottom sheet) */
-    #evt-detail{position:fixed;z-index:120;right:24px;bottom:24px;width:340px;max-width:calc(100vw - 32px);
-      background:rgba(13,16,22,.94);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+    /* Click-through event detail — overlay card + backdrop */
+    #evt-backdrop{position:fixed;z-index:119;inset:0;background:rgba(0,0,0,.45);opacity:0;pointer-events:none;transition:opacity .25s ease}
+    #evt-backdrop.show{opacity:1;pointer-events:auto}
+    #evt-detail{position:fixed;z-index:120;left:50%;top:50%;transform:translate(-50%,-50%) scale(.96);width:340px;max-width:calc(100vw - 32px);
+      background:rgba(13,16,22,.96);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
       border:1px solid rgba(232,93,74,.32);border-radius:14px;padding:20px 22px;
       box-shadow:0 24px 60px -20px rgba(0,0,0,.85);color:var(--text);
-      transform:translateY(16px);opacity:0;pointer-events:none;transition:opacity .28s ease,transform .28s ease}
-    #evt-detail.show{transform:translateY(0);opacity:1;pointer-events:auto}
+      opacity:0;pointer-events:none;transition:opacity .25s ease,transform .25s ease}
+    #evt-detail.show{transform:translate(-50%,-50%) scale(1);opacity:1;pointer-events:auto}
     #evt-detail .ed-close{position:absolute;top:12px;right:14px;width:26px;height:26px;border:none;background:none;color:var(--dim);font-size:20px;cursor:pointer;line-height:1}
     #evt-detail .ed-close:hover{color:var(--red-lt)}
     #evt-detail .ed-date{font-family:var(--serif);font-size:20px;font-weight:700;color:var(--red-pale);margin-bottom:2px}
@@ -5776,7 +5778,7 @@
     #evt-detail .ed-row{display:flex;justify-content:space-between;gap:14px;font-size:13px;padding:5px 0}
     #evt-detail .ed-row .ek{color:var(--faint)} #evt-detail .ed-row .ev{color:var(--text);text-align:right}
     @media(max-width:768px){
-      #evt-detail{right:0;left:0;bottom:0;width:100%;max-width:100%;border-radius:16px 16px 0 0;
+      #evt-detail{left:0;top:auto;bottom:0;width:100%;max-width:100%;border-radius:16px 16px 0 0;
         transform:translateY(100%);padding:22px 22px calc(22px + env(safe-area-inset-bottom))}
       #evt-detail.show{transform:translateY(0)}
     }
@@ -6122,6 +6124,7 @@
 </div><!-- .page -->
 
 <!-- Click-through event detail panel -->
+<div id="evt-backdrop"></div>
 <div id="evt-detail" aria-live="polite">
   <button class="ed-close" aria-label="关闭">×</button>
   <div class="ed-body"></div>
@@ -6139,6 +6142,7 @@ const WEAPON_CN_D = {'Explosives':'爆炸物','Firearms':'枪械','Unknown':'未
 const REGION_CN_D = {'South Asia':'南亚','Middle East & North Africa':'中东与北非','Sub-Saharan Africa':'撒哈拉以南非洲','Southeast Asia':'东南亚','Western Europe':'西欧','South America':'南美','North America':'北美','Eastern Europe':'东欧','Central America & Caribbean':'中美与加勒比','East Asia':'东亚','Central Asia':'中亚','Australasia & Oceania':'大洋洲'};
 function showEventDetail(e) {
   const panel = document.getElementById('evt-detail');
+  const backdrop = document.getElementById('evt-backdrop');
   if (!panel) return;
   const cn = (m, v) => (m && m[v]) || v;
   const perp = (!e.perpetrator || e.perpetrator === 'Unknown') ? '未知 / 无人宣称' : e.perpetrator;
@@ -6154,8 +6158,12 @@ function showEventDetail(e) {
      <div class="ed-row"><span class="ek">武器</span><span class="ev">${cn(WEAPON_CN_D, e.weapon)}</span></div>
      <div class="ed-row"><span class="ek">目标</span><span class="ev">${cn(TARGET_CN, (e.target||'').split(',')[0])}</span></div>`;
   panel.classList.add('show');
+  if (backdrop) backdrop.classList.add('show');
 }
-function hideEventDetail() { const p = document.getElementById('evt-detail'); if (p) p.classList.remove('show'); }
+function hideEventDetail() {
+  const p = document.getElementById('evt-detail'); if (p) p.classList.remove('show');
+  const b = document.getElementById('evt-backdrop'); if (b) b.classList.remove('show');
+}
 
 document.addEventListener('DOMContentLoaded', function() {
   new ParticleSystem('particle-bg');
@@ -6164,6 +6172,8 @@ document.addEventListener('DOMContentLoaded', function() {
   setupStaggerReveal();
 
   document.querySelector('#evt-detail .ed-close').addEventListener('click', hideEventDetail);
+  document.getElementById('evt-backdrop').addEventListener('click', hideEventDetail);
+  document.addEventListener('keydown', function(e) { if (e.key === 'Escape') hideEventDetail(); });
 
   const emberChart = createEmberChart('chart-ember');
   setupEmberStory(emberChart);
