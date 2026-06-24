@@ -657,6 +657,21 @@ function setupWeaponStory(containerId, sectionId) {
   apply('weapon-intro');
 }
 
+// Isotype story: light up the focused figure block (killed / injured), dim the other.
+function setupIsotypeStory(sectionId) {
+  const wraps = document.querySelectorAll('#' + sectionId + ' .iso-wrap');
+  if (!wraps.length) return;
+  const FOCUS = { 'human-killed': 'killed', 'human-injured': 'injured' };
+  function apply(id) {
+    const f = FOCUS[id];
+    wraps.forEach(w => { w.style.opacity = (!f || w.dataset.iso === f) ? '1' : '0.22'; });
+  }
+  window.addEventListener('storystate', e => {
+    if (e.detail && e.detail.section === sectionId && (e.detail.state in FOCUS)) apply(e.detail.state);
+  });
+  apply('human-killed');
+}
+
 // ============================================================
 // Resize all charts
 // ============================================================

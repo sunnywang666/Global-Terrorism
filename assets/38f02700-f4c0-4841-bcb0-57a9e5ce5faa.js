@@ -224,13 +224,15 @@ function setupMapStory(chart, effectData, normalData) {
     if (raf) cancelAnimationFrame(raf);
     const from = { center: cur.center.slice(), zoom: cur.zoom };
     const t0 = (window.performance || Date).now();
-    const dur = 750;
+    const dur = 900;
     function frame(now) {
       const k = Math.min(((window.performance || Date).now() - t0) / dur, 1);
-      const e = 1 - Math.pow(1 - k, 3); // easeOutCubic
+      // easeInOutCubic — smooth acceleration and deceleration
+      const e = k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2;
       const center = [from.center[0] + (target.center[0] - from.center[0]) * e,
                       from.center[1] + (target.center[1] - from.center[1]) * e];
-      const zoom = from.zoom + (target.zoom - from.zoom) * e;
+      // geometric interpolation keeps the visual zoom rate constant (no fast-then-slow lurch)
+      const zoom = from.zoom * Math.pow(target.zoom / from.zoom, e);
       chart.setOption({ geo: { center: center, zoom: zoom } });
       cur = { center: center, zoom: zoom };
       if (k < 1) raf = requestAnimationFrame(frame);
