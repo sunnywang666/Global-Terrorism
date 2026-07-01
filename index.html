@@ -5916,14 +5916,17 @@
       .story-section.split .story-step{min-height:94vh;display:block;padding:0;opacity:1}
       .story-section.split .story-step:first-child{min-height:100vh}
 
-      /* the card sticks to the top: every step's text lands in the SAME spot and hovers while you scroll */
-      .story-section.split .story-card{position:sticky;top:0;z-index:4;width:100%;max-width:none;margin:0;text-align:left;
-        padding:calc(18px + env(safe-area-inset-top,0px)) 20px 30px;line-height:1.85;
-        background:linear-gradient(180deg,rgba(11,13,18,.95) 0%,rgba(11,13,18,.9) 52%,rgba(11,13,18,.72) 80%,rgba(11,13,18,0) 100%);
-        -webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);border:none;border-radius:0;box-shadow:none;
-        transition:opacity .4s ease}
-      .story-section.split .story-step:not(.is-active) .story-card{opacity:0;pointer-events:none}
-      .story-section.split .story-step.is-active .story-card{opacity:1}
+      /* the card is a distinct floating BLOCK that sticks below the top edge and hovers while you scroll */
+      .story-section.split .story-card{position:sticky;top:calc(env(safe-area-inset-top,0px) + 7vh);z-index:4;
+        width:auto;max-width:none;margin:0 14px;text-align:left;
+        padding:16px 18px 18px;line-height:1.8;
+        background:#0a0d12;
+        -webkit-backdrop-filter:none;backdrop-filter:none;
+        border:1px solid rgba(235,240,250,.26);border-radius:0;
+        box-shadow:0 22px 50px -18px rgba(0,0,0,.95);
+        transition:opacity .45s ease,transform .45s ease}
+      .story-section.split .story-step:not(.is-active) .story-card{opacity:0;transform:translateY(10px);pointer-events:none}
+      .story-section.split .story-step.is-active .story-card{opacity:1;transform:none}
       .story-section.split .story-card p{font-size:15px}
     }
     /* clean de-carded figure (replaces .cf cards for simple charts) */
