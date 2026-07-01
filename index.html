@@ -5895,13 +5895,36 @@
     .story-chart{width:100%;max-width:760px;height:64vh;max-height:560px}
     @media(max-width:768px){ .story-chart{height:52vh} }
 
-    /* Mobile: collapse split back to full-bleed overlay with a readable card */
+    /* Mobile: stack vertically — text pinned at TOP (same spot, hovers), graphic pinned at BOTTOM */
     @media(max-width:860px){
-      .story-section.split{display:block}
+      .story-section.split{display:block;position:relative}
+
+      /* graphic fills the screen but its content is pushed into the BOTTOM band */
       .story-section.split .story-graphic{position:sticky;top:0;height:100vh}
-      .story-section.split .story-steps{margin-top:-100vh}
-      .story-section.split .story-step{min-height:92vh;justify-content:center;align-items:flex-end;padding:0 16px 9vh;opacity:1}
-      .story-section.split .story-card{max-width:520px;text-align:center;background:rgba(13,16,22,.7);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:20px 22px}
+      .story-section.split .story-graphic.is-chart{justify-content:flex-end;padding:0 8px calc(16px + env(safe-area-inset-bottom,0px))}
+      .story-section.split .story-chart{width:100%;height:56vh;max-height:none;max-width:640px}
+      /* isotype: show only the focused group (one text card = one figure block) */
+      .story-section.split .iso-stage{margin:0 auto;max-width:94vw;gap:0}
+      .story-section.split .iso-wrap.iso-off{display:none}
+      .story-section.split .iso-stage .isotype-label{justify-content:center}
+      /* weapon list: tighten so all six rows sit in the bottom band */
+      .story-section.split .weapon-row{padding:9px 0;gap:12px}
+      .story-section.split .weapon-icon{width:34px;height:34px}
+
+      /* text steps overlay the graphic; each step = ~one screen of scroll */
+      .story-section.split .story-steps{margin-top:-100vh;padding-bottom:0}
+      .story-section.split .story-step{min-height:94vh;display:block;padding:0;opacity:1}
+      .story-section.split .story-step:first-child{min-height:100vh}
+
+      /* the card sticks to the top: every step's text lands in the SAME spot and hovers while you scroll */
+      .story-section.split .story-card{position:sticky;top:0;z-index:4;width:100%;max-width:none;margin:0;text-align:left;
+        padding:calc(18px + env(safe-area-inset-top,0px)) 20px 30px;line-height:1.85;
+        background:linear-gradient(180deg,rgba(11,13,18,.95) 0%,rgba(11,13,18,.9) 52%,rgba(11,13,18,.72) 80%,rgba(11,13,18,0) 100%);
+        -webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);border:none;border-radius:0;box-shadow:none;
+        transition:opacity .4s ease}
+      .story-section.split .story-step:not(.is-active) .story-card{opacity:0;pointer-events:none}
+      .story-section.split .story-step.is-active .story-card{opacity:1}
+      .story-section.split .story-card p{font-size:15px}
     }
     /* clean de-carded figure (replaces .cf cards for simple charts) */
     .figure{margin-top:20px;margin-bottom:8px}

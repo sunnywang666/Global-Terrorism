@@ -694,7 +694,12 @@ function setupIsotypeStory(sectionId) {
   const FOCUS = { 'human-killed': 'killed', 'human-injured': 'injured' };
   function apply(id) {
     const f = FOCUS[id];
-    wraps.forEach(w => { w.style.opacity = (!f || w.dataset.iso === f) ? '1' : '0.22'; });
+    wraps.forEach(w => {
+      const on = (!f || w.dataset.iso === f);
+      w.style.opacity = on ? '1' : '0.22';
+      // mobile only (via CSS): fully hide the non-focused group so one card = one figure block
+      w.classList.toggle('iso-off', !on && !!f);
+    });
   }
   window.addEventListener('storystate', e => {
     if (e.detail && e.detail.section === sectionId && (e.detail.state in FOCUS)) apply(e.detail.state);
