@@ -1,9 +1,19 @@
 # 全球恐怖袭击 · 数据可视化
+### Global Terrorism — a scrollytelling data story
 
 一个单页滚动叙事（scrollytelling）作品，呈现 **2020 年 11 月 26 日至 12 月 31 日**、共 35 天内全球被记录的恐怖袭击：**700 起事件、1,920 人死亡、1,298 人受伤、波及 45 个国家**。
 
+A single-page scrollytelling piece covering 35 days of recorded terrorist attacks worldwide (Nov 26 – Dec 31, 2020): 700 incidents, 1,920 deaths, 1,298 injured, across 45 countries. Nine chapters, a hand-written scroll engine (IntersectionObserver + custom particle system, no scrollama), and honest disclosure of data limitations (37% of perpetrators unknown; figures are lower bounds).
+
+**▶ Live: https://sunnywang666.github.io/Global-Terrorism/**
+
+配套 A3 海报 / companion A3 poster:
+
+<img src="docs/poster-a3.jpg" width="420" alt="恐怖袭击数据新闻 A3 海报">
+
 - **数据来源**：CnOpenData · 全球恐怖袭击数据库
-- **技术**：纯 HTML / CSS / JavaScript + ECharts，无需构建、无需联网
+- **技术**：纯 HTML / CSS / JavaScript + ECharts（图表）+ 手写滚动引擎与粒子系统（叙事），无需构建
+- **叙事打磨**：32 次提交中多轮重写文案去除套路化表达，借鉴《Rape in India》等经典数据新闻的叙事手法
 
 ---
 
